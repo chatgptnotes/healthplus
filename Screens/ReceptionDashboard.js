@@ -224,6 +224,36 @@ const ReceptionDashboard = (props) => {
 							<MaterialIcons name="emergency" size={30} color="#84cc16" />
 							<Text style={styles.actionText}>Emergency Alert</Text>
 						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.actionButton}
+							onPress={() => {
+								try {
+									console.log('Navigating to PatientFeedback...');
+									props.navigation.navigate('PatientFeedback');
+								} catch (error) {
+									console.error('Navigation error:', error);
+									alert('Navigation error: ' + error.message);
+								}
+							}}
+						>
+							<MaterialIcons name="feedback" size={30} color="#06b6d4" />
+							<Text style={styles.actionText}>Patient Feedback</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.actionButton}
+							onPress={() => {
+								try {
+									console.log('Navigating to DigitalConsent...');
+									props.navigation.navigate('DigitalConsent');
+								} catch (error) {
+									console.error('Navigation error:', error);
+									alert('Navigation error: ' + error.message);
+								}
+							}}
+						>
+							<MaterialCommunityIcons name="file-document-edit" size={30} color="#8b5cf6" />
+							<Text style={styles.actionText}>Digital Consent</Text>
+						</TouchableOpacity>
 					</View>
 				</View>
 			</ScrollView>

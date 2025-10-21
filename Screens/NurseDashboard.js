@@ -8,6 +8,7 @@ import {
 	FlatList,
 	ActivityIndicator,
 	SafeAreaView,
+	Alert,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -33,8 +34,8 @@ const NurseDashboard = (props) => {
 		]
 	});
 
-	const renderStatCard = (title, value, icon, color) => (
-		<TouchableOpacity style={[styles.statCard, { backgroundColor: color }]}>
+	const renderStatCard = (title, value, icon, color, onPress) => (
+		<TouchableOpacity style={[styles.statCard, { backgroundColor: color }]} onPress={onPress}>
 			<View style={styles.statIconContainer}>
 				<MaterialIcons name={icon} size={24} color="white" />
 			</View>
@@ -96,10 +97,45 @@ const NurseDashboard = (props) => {
 			<ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
 				{/* Statistics Cards */}
 				<View style={styles.statsContainer}>
-					{renderStatCard('Assigned Patients', dashboardData.assignedPatients, 'people', '#f59e0b')}
-					{renderStatCard('Pending Medications', dashboardData.pendingMedications, 'medication', '#ef4444')}
-					{renderStatCard('Vitals Overdue', dashboardData.vitalsOverdue, 'monitor-heart', '#f59e0b')}
-					{renderStatCard('Emergency Alerts', dashboardData.emergencyAlerts, 'warning', '#dc2626')}
+					{renderStatCard('Assigned Patients', dashboardData.assignedPatients, 'people', '#f59e0b', () => Alert.alert(
+						'Assigned Patients Overview',
+						'Patient assignment details for today:\n\n👥 TOTAL ASSIGNED: 15 patients\n\n🏥 BY ROOM:\n• Room 301A - Alice Johnson (High Priority)\n• Room 302B - Bob Smith (Medication Due)\n• Room 303A - Carol Davis (Dressing Change)\n• Room 304B - David Wilson (Post-Op)\n• Room 305A - Emma Brown (Vitals Due)\n\n📊 PATIENT STATUS:\n• Stable: 12 patients\n• Requires Monitoring: 2 patients\n• Critical: 1 patient\n\n⏰ UPCOMING TASKS:\n• Medication rounds: 8 patients\n• Vital checks: 5 patients\n• Procedures: 2 patients',
+						[
+							{ text: 'View Patient List', onPress: () => Alert.alert('Patient List', 'Detailed patient assignments:\n\n1. Alice Johnson - Room 301A\n   - Medications due: 2:00 PM\n   - Last vitals: 1 hour ago\n   - Notes: Monitor BP\n\n2. Bob Smith - Room 302B\n   - Medications due: Now\n   - Last vitals: 3 hours ago\n   - Notes: Diabetes management\n\n3. Carol Davis - Room 303A\n   - Dressing change due: 3:00 PM\n   - Last vitals: 2 hours ago\n   - Notes: Post-surgical care') },
+							{ text: 'Reassign Patients', onPress: () => Alert.alert('Patient Reassignment', 'Requesting supervisor for patient reassignment.\n\nCurrent load: 15 patients\nRecommended load: 12 patients\n\nSupervisor will be notified to balance assignments.') },
+							{ text: 'OK' }
+						]
+					))}
+					{renderStatCard('Pending Medications', dashboardData.pendingMedications, 'medication', '#ef4444', () => Alert.alert(
+						'Pending Medications - Action Required',
+						'🔴 URGENT MEDICATIONS DUE:\n\n💊 NOW OVERDUE:\n• Bob Smith (Room 302B) - Metformin 500mg\n• David Wilson (Room 304B) - Pain medication\n\n⏰ DUE WITHIN 30 MINUTES:\n• Alice Johnson (Room 301A) - Lisinopril 10mg\n• Emma Brown (Room 305A) - Insulin injection\n• Carol Davis (Room 303A) - Antibiotic\n\n🟡 DUE THIS HOUR:\n• Patient in Room 306A - Vitamin supplements\n• Patient in Room 307B - Blood thinner\n• Patient in Room 308A - Heart medication',
+						[
+							{ text: 'Start Medication Round', onPress: () => Alert.alert('Medication Round Started', 'Starting systematic medication distribution:\n\n✓ Overdue medications prioritized\n✓ Patient identity verification required\n✓ Medication scanner ready\n✓ Documentation system active\n\nFirst stop: Room 302B - Bob Smith\nMedication: Metformin 500mg') },
+							{ text: 'Mark as Administered', onPress: () => Alert.alert('Medication Administration', 'Select patient to mark medication as given:\n\n• Bob Smith - Metformin\n• David Wilson - Pain med\n• Alice Johnson - Lisinopril\n• Emma Brown - Insulin\n\nRequires electronic signature and timestamp.') },
+							{ text: 'Request Pharmacy', onPress: () => Alert.alert('Pharmacy Request', 'Requesting pharmacy for missing medications:\n\n• 2 medications out of stock\n• 1 medication needs preparation\n• Estimated delivery: 15 minutes\n\nPharmacy has been notified.') },
+							{ text: 'OK' }
+						]
+					))}
+					{renderStatCard('Vitals Overdue', dashboardData.vitalsOverdue, 'monitor-heart', '#f59e0b', () => Alert.alert(
+						'Overdue Vital Signs - Priority List',
+						'🔴 CRITICALLY OVERDUE (>6 hours):\n• Room 304B - Last check: 8 hours ago\n• Room 306A - Last check: 10 hours ago\n\n🟡 OVERDUE (4-6 hours):\n• Room 301A - Last check: 5 hours ago\n• Room 302B - Last check: 4.5 hours ago\n• Room 308A - Last check: 4 hours ago\n\n📊 REQUIRED VITALS:\n• Blood Pressure\n• Temperature\n• Pulse Rate\n• Oxygen Saturation\n• Respiratory Rate',
+						[
+							{ text: 'Start Vital Checks', onPress: () => Alert.alert('Vital Signs Round', 'Beginning systematic vital signs collection:\n\n🎯 Priority Order:\n1. Room 304B (Critical - 8 hrs overdue)\n2. Room 306A (Critical - 10 hrs overdue)\n3. Room 301A (Overdue - 5 hrs)\n4. Room 302B (Overdue - 4.5 hrs)\n\nVital signs equipment ready.\nDocumentation system active.') },
+							{ text: 'View Last Readings', onPress: () => Alert.alert('Recent Vital Signs', 'Last recorded vital signs:\n\nRoom 304B (8 hrs ago):\n• BP: 128/82\n• Temp: 98.9°F\n• Pulse: 76\n• O2 Sat: 97%\n\nRoom 301A (5 hrs ago):\n• BP: 135/88\n• Temp: 99.2°F\n• Pulse: 82\n• O2 Sat: 96%') },
+							{ text: 'Set Reminders', onPress: () => Alert.alert('Vital Signs Reminders', 'Setting up automated reminders:\n\n⏰ Every 4 hours for stable patients\n⏰ Every 2 hours for monitoring patients\n⏰ Every hour for critical patients\n\nReminder system activated.') },
+							{ text: 'OK' }
+						]
+					))}
+					{renderStatCard('Emergency Alerts', dashboardData.emergencyAlerts, 'warning', '#dc2626', () => Alert.alert(
+						'Active Emergency Alerts',
+						'🚨 CURRENT EMERGENCY SITUATIONS:\n\n🔴 CODE YELLOW (Room 305A):\n• Patient: Emma Brown\n• Alert: Blood sugar critically low\n• Time: 15 minutes ago\n• Status: Response team en route\n\n🟡 FALL RISK ALERT (Room 307B):\n• Patient: Frank Miller\n• Alert: High fall risk patient unattended\n• Time: 8 minutes ago\n• Status: Monitoring required\n\n📊 ALERT SUMMARY:\n• Total active alerts: 2\n• Average response time: 3.2 minutes\n• Resolved today: 4 alerts',
+						[
+							{ text: 'Respond to Code Yellow', onPress: () => Alert.alert('Code Yellow Response', '🚨 RESPONDING TO MEDICAL EMERGENCY\n\nPatient: Emma Brown (Room 305A)\nCondition: Hypoglycemia\n\n✅ ACTIONS TAKEN:\n• Nurse dispatched immediately\n• Blood glucose kit prepared\n• Physician notified\n• IV dextrose ready\n\n⏱️ Response Time: 2 minutes\nStatus: Emergency team on scene') },
+							{ text: 'Address Fall Risk', onPress: () => Alert.alert('Fall Risk Management', '⚠️ FALL RISK INTERVENTION\n\nPatient: Frank Miller (Room 307B)\n\n✅ IMMEDIATE ACTIONS:\n• Bed alarm activated\n• Call bell within reach\n• Side rails raised\n• Non-slip socks provided\n• Frequent check schedule: Every 30 min\n\nFamily notified of safety measures.') },
+							{ text: 'View Alert History', onPress: () => Alert.alert('Emergency Alert Log', 'Recent emergency alerts resolved:\n\n✅ 10:30 AM - Medication allergy (Room 309)\n✅ 11:45 AM - Vitals abnormal (Room 302)\n✅ 1:20 PM - Patient disorientation (Room 310)\n✅ 2:10 PM - Equipment malfunction (Room 304)\n\nAverage resolution time: 4.5 minutes') },
+							{ text: 'OK' }
+						]
+					))}
 				</View>
 
 				{/* Patient Care Queue */}
@@ -142,7 +178,17 @@ const NurseDashboard = (props) => {
 						</TouchableOpacity>
 						<TouchableOpacity
 							style={styles.actionButton}
-							onPress={() => alert('Record Vitals feature coming soon!')}
+							onPress={() => Alert.alert(
+								'Record Patient Vitals',
+								'Select patient and vital signs to record:',
+								[
+									{ text: 'Alice Johnson - Room 301A', onPress: () => Alert.alert('Vitals Entry', 'Patient: Alice Johnson\nRoom: 301A\n\nEnter vital signs:\n• Blood Pressure: ___/___\n• Temperature: ___°F\n• Pulse: ___ BPM\n• Oxygen Saturation: ___%\n• Respiratory Rate: ___\n\n[Save] [Cancel]') },
+									{ text: 'Bob Smith - Room 302B', onPress: () => Alert.alert('Vitals Entry', 'Patient: Bob Smith\nRoom: 302B\n\nEnter vital signs:\n• Blood Pressure: ___/___\n• Temperature: ___°F\n• Pulse: ___ BPM\n• Oxygen Saturation: ___%\n• Respiratory Rate: ___\n\n[Save] [Cancel]') },
+									{ text: 'Carol Davis - Room 303A', onPress: () => Alert.alert('Vitals Entry', 'Patient: Carol Davis\nRoom: 303A\n\nEnter vital signs:\n• Blood Pressure: ___/___\n• Temperature: ___°F\n• Pulse: ___ BPM\n• Oxygen Saturation: ___%\n• Respiratory Rate: ___\n\n[Save] [Cancel]') },
+									{ text: 'View Overdue Vitals', onPress: () => Alert.alert('Overdue Vitals', 'Patients requiring vital signs check:\n\n🔴 OVERDUE (>6 hours):\n• Room 304B - Last: 8 hours ago\n• Room 306A - Last: 10 hours ago\n\n🟡 DUE SOON:\n• Room 301A - Due in 30 min\n• Room 302B - Due in 1 hour') },
+									{ text: 'Cancel', style: 'cancel' }
+								]
+							)}
 						>
 							<MaterialIcons name="monitor-heart" size={30} color="#f59e0b" />
 							<Text style={styles.actionText}>Record Vitals</Text>
@@ -156,7 +202,17 @@ const NurseDashboard = (props) => {
 						</TouchableOpacity>
 						<TouchableOpacity
 							style={styles.actionButton}
-							onPress={() => alert('Emergency Alert sent!')}
+							onPress={() => Alert.alert(
+								'Emergency Response System',
+								'Select emergency type and location:',
+								[
+									{ text: 'Code Blue - Cardiac Arrest', onPress: () => Alert.alert('Code Blue Activated', '🚨 EMERGENCY ALERT 🚨\n\nCode Blue - Room 301A\nCardiac Arrest Protocol\n\nResponse team dispatched:\n✓ Emergency physician\n✓ Critical care nurse\n✓ Respiratory therapist\n✓ Crash cart activated\n\nETA: 2 minutes\nTime: ' + new Date().toLocaleTimeString()) },
+									{ text: 'Code Red - Fire Emergency', onPress: () => Alert.alert('Code Red Activated', '🔥 FIRE EMERGENCY 🔥\n\nCode Red - Building Alert\nEvacuation Protocol Active\n\n✓ Fire department notified\n✓ Security alerted\n✓ Evacuation routes activated\n✓ Emergency lighting on\n\nTime: ' + new Date().toLocaleTimeString()) },
+									{ text: 'Rapid Response - Patient Deterioration', onPress: () => Alert.alert('Rapid Response Called', '⚡ RAPID RESPONSE ⚡\n\nPatient: Room 302B\nClinical deterioration\n\nResponse team:\n✓ ICU physician\n✓ Critical care nurse\n✓ Respiratory therapist\n\nAssessing patient status...\nTime: ' + new Date().toLocaleTimeString()) },
+									{ text: 'Security Alert', onPress: () => Alert.alert('Security Alert', '🛡️ SECURITY ALERT 🛡️\n\nSecurity team dispatched\nLocation: Nursing Station 3A\n\n✓ Security officers notified\n✓ Area supervisor alerted\n✓ Management informed\n\nResponse time: 3 minutes\nTime: ' + new Date().toLocaleTimeString()) },
+									{ text: 'Cancel', style: 'cancel' }
+								]
+							)}
 						>
 							<MaterialIcons name="emergency" size={30} color="#f59e0b" />
 							<Text style={styles.actionText}>Emergency Call</Text>

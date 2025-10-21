@@ -54,6 +54,19 @@ import RadiologyImageViewer from './Screens/RadiologyImageViewer';
 // Import Nursing module screens
 import NursingManagement from './Screens/NursingManagement';
 
+// Import Patient Feedback & Digital Consent module screens
+import PatientFeedback from './Screens/PatientFeedback';
+import DigitalConsent from './Screens/DigitalConsent';
+import FeedbackAnalytics from './Screens/FeedbackAnalytics';
+
+// Import Quality Management & Leadership module screens
+import MorningHuddle from './Screens/MorningHuddle';
+import MarketingDashboard from './Screens/MarketingDashboard';
+import LeadershipTeam from './Screens/LeadershipTeam';
+import QualityDashboard from './Screens/QualityDashboard';
+import NABHAccreditation from './Screens/NABHAccreditation';
+import SOPManagement from './Screens/SOPManagement';
+
 const store = configureStore({
   reducer: {
     appointment: AppointmentReducer,
@@ -294,6 +307,55 @@ function HomeStack() {
         name="NursingManagement"
         component={NursingManagement}
         options={{ title: 'Nursing Management' }}
+      />
+
+      {/* Patient Feedback & Digital Consent Module Screens */}
+      <Stack.Screen
+        name="PatientFeedback"
+        component={PatientFeedback}
+        options={{ title: 'Patient Feedback' }}
+      />
+      <Stack.Screen
+        name="DigitalConsent"
+        component={DigitalConsent}
+        options={{ title: 'Digital Consent' }}
+      />
+      <Stack.Screen
+        name="FeedbackAnalytics"
+        component={FeedbackAnalytics}
+        options={{ title: 'Feedback Analytics' }}
+      />
+
+      {/* Quality Management & Leadership Module Screens */}
+      <Stack.Screen
+        name="MorningHuddle"
+        component={MorningHuddle}
+        options={{ title: 'Morning Huddle' }}
+      />
+      <Stack.Screen
+        name="MarketingDashboard"
+        component={MarketingDashboard}
+        options={{ title: 'Marketing Dashboard' }}
+      />
+      <Stack.Screen
+        name="LeadershipTeam"
+        component={LeadershipTeam}
+        options={{ title: 'Leadership Team' }}
+      />
+      <Stack.Screen
+        name="QualityDashboard"
+        component={QualityDashboard}
+        options={{ title: 'Quality Dashboard' }}
+      />
+      <Stack.Screen
+        name="NABHAccreditation"
+        component={NABHAccreditation}
+        options={{ title: 'NABH Accreditation' }}
+      />
+      <Stack.Screen
+        name="SOPManagement"
+        component={SOPManagement}
+        options={{ title: 'SOPs & Training' }}
       />
     </Stack.Navigator>
   );

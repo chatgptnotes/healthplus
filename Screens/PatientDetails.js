@@ -170,6 +170,16 @@ const PatientDetails = (props) => {
 		Alert.alert('Process Payment', 'Navigate to billing and payment screen');
 	};
 
+	const submitFeedback = () => {
+		// Navigate to patient feedback screen
+		props.navigation.navigate('PatientFeedback');
+	};
+
+	const digitalConsent = () => {
+		// Navigate to digital consent screen
+		props.navigation.navigate('DigitalConsent');
+	};
+
 	const renderTabButton = (tab, label, icon) => (
 		<TouchableOpacity
 			style={[styles.tabButton, activeTab === tab && styles.activeTabButton]}
@@ -273,6 +283,16 @@ const PatientDetails = (props) => {
 					<TouchableOpacity style={styles.quickActionButton} onPress={editPatient}>
 						<MaterialIcons name="edit" size={24} color="#10b981" />
 						<Text style={styles.quickActionText}>Edit</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={styles.quickActionsSecondary}>
+					<TouchableOpacity style={styles.quickActionButton} onPress={submitFeedback}>
+						<MaterialIcons name="feedback" size={24} color="#06b6d4" />
+						<Text style={styles.quickActionText}>Feedback</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.quickActionButton} onPress={digitalConsent}>
+						<MaterialCommunityIcons name="file-document-edit" size={24} color="#8b5cf6" />
+						<Text style={styles.quickActionText}>Consent</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -579,6 +599,19 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		borderRadius: 12,
 		paddingVertical: 20,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.05,
+		shadowRadius: 4,
+		elevation: 3,
+	},
+	quickActionsSecondary: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		backgroundColor: 'white',
+		borderRadius: 12,
+		paddingVertical: 20,
+		marginTop: 10,
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.05,

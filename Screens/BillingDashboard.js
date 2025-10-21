@@ -23,9 +23,9 @@ const BillingDashboard = (props) => {
 		insuranceClaims: 12,
 		cashlessApprovals: 8,
 		recentTransactions: [
-			{ id: '1', patient: 'John Doe', amount: 5500, type: 'Cash', status: 'Completed', time: '10:30 AM' },
-			{ id: '2', patient: 'Mary Smith', amount: 12000, type: 'Insurance', status: 'Pending', time: '10:15 AM' },
-			{ id: '3', patient: 'Robert Wilson', amount: 8500, type: 'Card', status: 'Completed', time: '9:45 AM' },
+			{ id: '1', patient: 'Manish Agarwal', amount: 5500, type: 'Cash', status: 'Completed', time: '10:30 AM' },
+			{ id: '2', patient: 'Kavita Sharma', amount: 12000, type: 'Insurance', status: 'Pending', time: '10:15 AM' },
+			{ id: '3', patient: 'Ravi Kumar', amount: 8500, type: 'Card', status: 'Completed', time: '9:45 AM' },
 		],
 		insuranceBreakdown: [
 			{ id: '1', provider: 'CGHS', claims: 15, amount: 85000, status: 'Active' },
@@ -34,14 +34,14 @@ const BillingDashboard = (props) => {
 			{ id: '4', provider: 'TPA Health', claims: 12, amount: 65000, status: 'Active' },
 		],
 		pendingBills: [
-			{ id: '1', patient: 'Alice Johnson', amount: 15000, department: 'Cardiology', days: 2 },
-			{ id: '2', patient: 'Bob Brown', amount: 8500, department: 'Orthopedics', days: 1 },
-			{ id: '3', patient: 'Carol Davis', amount: 12000, department: 'Neurology', days: 3 },
+			{ id: '1', patient: 'Pooja Gupta', amount: 15000, department: 'Cardiology', days: 2 },
+			{ id: '2', patient: 'Suresh Patel', amount: 8500, department: 'Orthopedics', days: 1 },
+			{ id: '3', patient: 'Deepika Singh', amount: 12000, department: 'Neurology', days: 3 },
 		]
 	});
 
-	const renderStatCard = (title, value, icon, color, prefix = '') => (
-		<TouchableOpacity style={[styles.statCard, { backgroundColor: color }]}>
+	const renderStatCard = (title, value, icon, color, prefix = '', onPress) => (
+		<TouchableOpacity style={[styles.statCard, { backgroundColor: color }]} onPress={onPress}>
 			<View style={styles.statIconContainer}>
 				<MaterialIcons name={icon} size={24} color="white" />
 			</View>
@@ -127,10 +127,46 @@ const BillingDashboard = (props) => {
 			<ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
 				{/* Statistics Cards */}
 				<View style={styles.statsContainer}>
-					{renderStatCard('Today\'s Collection', dashboardData.todaysCollection.toLocaleString(), 'account-balance-wallet', '#06b6d4', '₹')}
-					{renderStatCard('Pending Bills', dashboardData.pendingBills.length, 'receipt', '#f59e0b')}
-					{renderStatCard('Insurance Claims', dashboardData.insuranceClaims, 'local-hospital', '#10b981')}
-					{renderStatCard('Cashless Approvals', dashboardData.cashlessApprovals, 'verified', '#8b5cf6')}
+					{renderStatCard('Today\'s Collection', dashboardData.todaysCollection.toLocaleString(), 'account-balance-wallet', '#06b6d4', '₹', () => Alert.alert(
+						'Today\'s Collection Summary',
+						'💰 DAILY COLLECTION REPORT\n\n📊 Total Collection: ₹' + dashboardData.todaysCollection.toLocaleString() + '\n\n💳 PAYMENT BREAKDOWN:\n• Cash Payments: ₹45,200 (42%)\n• Card Payments: ₹38,500 (36%)\n• Digital Payments: ₹18,300 (17%)\n• Insurance Direct: ₹5,400 (5%)\n\n🏥 DEPARTMENT WISE:\n• Emergency: ₹28,400\n• General Ward: ₹32,600\n• ICU: ₹24,800\n• Surgery: ₹21,600\n\n📈 HOURLY COLLECTION:\n• 8-12 AM: ₹35,200\n• 12-4 PM: ₹42,100\n• 4-8 PM: ₹30,100',
+						[
+							{ text: 'View Payment Details', onPress: () => Alert.alert('Payment Details', 'Recent major payments:\n\n• 2:30 PM - ₹15,400 (Surgery - Mr. Sharma)\n• 1:45 PM - ₹8,200 (Emergency - Ms. Patel)\n• 12:20 PM - ₹12,600 (ICU - Mr. Kumar)\n• 11:30 AM - ₹6,800 (General - Mrs. Singh)\n\nAll payments verified and recorded.') },
+							{ text: 'Generate Receipt Report', onPress: () => Alert.alert('Receipt Report', 'Daily receipt report generated:\n\n📄 Total Receipts: 147\n✅ Processed: 147\n⏳ Pending: 0\n\nReport sent to accounts department.\nBackup saved to system.') },
+							{ text: 'View Trends', onPress: () => Alert.alert('Collection Trends', 'Weekly collection analysis:\n\n📈 This Week: ₹742,300\n📈 Last Week: ₹698,500\n📈 Growth: +6.3%\n\n🏆 Best Day: Wednesday (₹125,600)\n📉 Lowest Day: Sunday (₹78,400)\n\nTrend: Increasing collections') },
+							{ text: 'OK' }
+						]
+					))}
+					{renderStatCard('Pending Bills', dashboardData.pendingBills.length, 'receipt', '#f59e0b', '', () => Alert.alert(
+						'Pending Bills - Action Required',
+						'📋 BILLS AWAITING PAYMENT\n\n🔴 OVERDUE (>7 days): ' + Math.floor(dashboardData.pendingBills.length * 0.3) + ' bills\n🟡 DUE SOON (3-7 days): ' + Math.floor(dashboardData.pendingBills.length * 0.4) + ' bills\n🟢 RECENT (<3 days): ' + Math.floor(dashboardData.pendingBills.length * 0.3) + ' bills\n\n💰 TOTAL AMOUNT:\n• Overdue: ₹1,24,500\n• Due Soon: ₹2,18,300\n• Recent: ₹1,89,600\n\n📊 BY DEPARTMENT:\n• General Ward: 8 bills\n• Emergency: 5 bills\n• Surgery: 4 bills\n• ICU: 3 bills',
+						[
+							{ text: 'Process Overdue Bills', onPress: () => Alert.alert('Overdue Bills Processing', '🔴 PRIORITY OVERDUE BILLS:\n\n1. John Smith - ₹45,200 (12 days overdue)\n   Department: Surgery\n   Status: Insurance pending\n\n2. Mary Johnson - ₹32,100 (9 days overdue)\n   Department: ICU\n   Status: Family contacted\n\n3. Robert Wilson - ₹28,600 (8 days overdue)\n   Department: Emergency\n   Status: Payment plan requested\n\nCollection team has been notified.') },
+							{ text: 'Send Payment Reminders', onPress: () => Alert.alert('Payment Reminders', 'Automated payment reminders sent:\n\n📧 Email reminders: 15 sent\n📱 SMS alerts: 12 sent\n📞 Call notifications: 5 scheduled\n\n⏰ Follow-up schedule:\n• Tomorrow: 8 patients\n• Day after: 5 patients\n• End of week: 2 patients\n\nReminder system active.') },
+							{ text: 'View Detailed List', onPress: () => Alert.alert('Detailed Bill List', 'Top pending bills by amount:\n\n1. ₹45,200 - John Smith (Surgery)\n2. ₹38,900 - Sarah Davis (ICU)\n3. ₹32,100 - Mary Johnson (Emergency)\n4. ₹28,600 - Robert Wilson (General)\n5. ₹24,300 - Lisa Brown (Surgery)\n\nTotal pending: ₹' + (124500 + 218300 + 189600).toLocaleString()) },
+							{ text: 'OK' }
+						]
+					))}
+					{renderStatCard('Insurance Claims', dashboardData.insuranceClaims, 'local-hospital', '#10b981', '', () => Alert.alert(
+						'Insurance Claims Management',
+						'🏥 INSURANCE CLAIMS STATUS\n\n📊 TOTAL CLAIMS: ' + dashboardData.insuranceClaims + '\n\n✅ APPROVED: 42 claims (₹18,24,600)\n⏳ PENDING: 28 claims (₹12,45,300)\n🔄 UNDER REVIEW: 15 claims (₹8,76,200)\n❌ REJECTED: 3 claims (₹1,23,400)\n\n🏢 TOP INSURANCE PARTNERS:\n• Star Health: 25 claims\n• HDFC Ergo: 18 claims\n• ICICI Lombard: 15 claims\n• New India: 12 claims\n• Oriental: 8 claims\n\n⏱️ AVERAGE PROCESSING TIME: 5.2 days',
+						[
+							{ text: 'Process Pending Claims', onPress: () => Alert.alert('Pending Claims Processing', '⏳ CLAIMS AWAITING ACTION:\n\n🔄 Ready for Submission:\n• Claim #IC2024-001 - ₹45,600 (Star Health)\n• Claim #IC2024-002 - ₹32,800 (HDFC Ergo)\n• Claim #IC2024-003 - ₹28,900 (ICICI Lombard)\n\n📋 Documents Required:\n• 5 claims need discharge summary\n• 3 claims need additional tests\n• 2 claims need doctor signatures\n\nProcessing initiated.') },
+							{ text: 'Follow Up Rejections', onPress: () => Alert.alert('Rejected Claims Follow-up', '❌ REJECTED CLAIMS ANALYSIS:\n\n1. Claim #IC2024-015 - ₹52,300\n   Reason: Incomplete documentation\n   Action: Re-submit with missing docs\n\n2. Claim #IC2024-022 - ₹38,700\n   Reason: Pre-approval not taken\n   Action: Appeal with justification\n\n3. Claim #IC2024-028 - ₹32,400\n   Reason: Treatment not covered\n   Action: Patient responsibility\n\nAppeal process initiated for eligible claims.') },
+							{ text: 'Generate Claims Report', onPress: () => Alert.alert('Claims Report Generated', 'Monthly insurance claims report:\n\n📈 Approval Rate: 84.2%\n💰 Total Processed: ₹42,68,500\n⏱️ Average TAT: 5.2 days\n\n🏆 Top Performing Insurers:\n1. Star Health - 96% approval\n2. HDFC Ergo - 91% approval\n3. ICICI Lombard - 88% approval\n\nReport saved and sent to management.') },
+							{ text: 'OK' }
+						]
+					))}
+					{renderStatCard('Cashless Approvals', dashboardData.cashlessApprovals, 'verified', '#8b5cf6', '', () => Alert.alert(
+						'Cashless Approvals Dashboard',
+						'💳 CASHLESS TREATMENT STATUS\n\n📊 TOTAL APPROVALS: ' + dashboardData.cashlessApprovals + '\n\n✅ ACTIVE APPROVALS: 18 patients\n⏳ PENDING APPROVAL: 12 requests\n🔄 RENEWAL REQUIRED: 6 cases\n⚠️ LIMIT EXCEEDED: 2 cases\n\n💰 APPROVED AMOUNTS:\n• Total Sanctioned: ₹28,45,600\n• Amount Utilized: ₹19,67,400\n• Available Balance: ₹8,78,200\n\n🏥 DEPARTMENT WISE:\n• Cardiology: 8 approvals\n• Orthopedics: 6 approvals\n• Neurology: 4 approvals\n• General Surgery: 4 approvals',
+						[
+							{ text: 'Process Pending Requests', onPress: () => Alert.alert('Pending Cashless Requests', '⏳ APPROVAL REQUESTS WAITING:\n\n🔄 HIGH PRIORITY:\n• Patient: Mr. Rajesh Kumar\n  Amount: ₹2,45,000 (Cardiac Surgery)\n  Insurer: Star Health\n  Status: Pre-auth sent\n\n• Patient: Mrs. Priya Sharma\n  Amount: ₹1,68,000 (Orthopedic)\n  Insurer: HDFC Ergo\n  Status: Awaiting documents\n\n⏱️ Average approval time: 24-48 hours\nFollow-up with insurers initiated.') },
+							{ text: 'Monitor Active Cases', onPress: () => Alert.alert('Active Cashless Monitoring', '✅ ONGOING CASHLESS TREATMENTS:\n\n1. Room 301 - Mr. Arun Patel\n   Approved: ₹3,20,000\n   Utilized: ₹1,85,000\n   Remaining: ₹1,35,000\n   Days: 5 of 10\n\n2. Room 205 - Mrs. Sita Devi\n   Approved: ₹2,10,000\n   Utilized: ₹1,92,000\n   Remaining: ₹18,000\n   Status: Near limit\n\nDaily monitoring active for all cases.') },
+							{ text: 'Renewal Alerts', onPress: () => Alert.alert('Renewal Required', '🔄 APPROVALS NEEDING RENEWAL:\n\n⚠️ EXPIRING SOON:\n• Patient: Mr. Vijay Singh (Room 408)\n  Current Limit: ₹1,50,000\n  Expires: Tomorrow\n  Action: Extension requested\n\n• Patient: Mrs. Lakshmi (Room 312)\n  Current Limit: ₹2,00,000\n  Expires: 2 days\n  Action: Pending insurer response\n\nRenewal requests submitted proactively.') },
+							{ text: 'OK' }
+						]
+					))}
 				</View>
 
 				{/* Recent Transactions */}

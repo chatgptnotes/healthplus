@@ -26,9 +26,9 @@ const PharmacyDashboard = (props) => {
 		todaysDispensing: 45,
 		monthlyRevenue: 85000,
 		recentPrescriptions: [
-			{ id: '1', patientName: 'John Doe', doctor: 'Dr. Smith', status: 'Pending', priority: 'High' },
-			{ id: '2', patientName: 'Jane Wilson', doctor: 'Dr. Johnson', status: 'Ready', priority: 'Normal' },
-			{ id: '3', patientName: 'Mike Brown', doctor: 'Dr. Davis', status: 'Processing', priority: 'Normal' },
+			{ id: '1', patientName: 'Raj Agarwal', doctor: 'Dr. Sharma', status: 'Pending', priority: 'High' },
+			{ id: '2', patientName: 'Kavya Iyer', doctor: 'Dr. Reddy', status: 'Ready', priority: 'Normal' },
+			{ id: '3', patientName: 'Deepak Verma', doctor: 'Dr. Malhotra', status: 'Processing', priority: 'Normal' },
 		],
 		lowStockMedicines: [
 			{ id: '1', name: 'Paracetamol 500mg', currentStock: 50, minStock: 100, supplier: 'MedCorp' },
@@ -189,7 +189,17 @@ const PharmacyDashboard = (props) => {
 						</TouchableOpacity>
 						<TouchableOpacity
 							style={styles.actionButton}
-							onPress={() => alert('Pharmacy Reports feature coming soon!')}
+							onPress={() => Alert.alert(
+								'Pharmacy Reports Dashboard',
+								'Select report type:',
+								[
+									{ text: 'Inventory Report', onPress: () => Alert.alert('Inventory Report', 'PHARMACY INVENTORY SUMMARY\n\n📊 Current Stock Status:\n• Total Items: 2,847\n• Low Stock Alerts: 23 items\n• Expired Items: 5 items\n• Critical Stock: 8 items\n\n💰 Inventory Value:\n• Total Value: $486,920\n• This Month: $52,140\n• Last Month: $48,670\n\nTop Low Stock Items:\n• Metformin 500mg: 12 units\n• Aspirin 81mg: 8 units\n• Amoxicillin 250mg: 15 units') },
+									{ text: 'Sales Report', onPress: () => Alert.alert('Sales Report', 'PHARMACY SALES ANALYTICS\n\n📈 Today\'s Sales: $8,420\n📈 This Week: $52,140\n📈 This Month: $218,560\n\n🔥 Top Selling Items:\n1. Paracetamol 500mg - 145 units\n2. Cough Syrup - 98 units\n3. Vitamin D3 - 87 units\n4. Blood Pressure Meds - 76 units\n5. Insulin - 62 units\n\n📊 Sales by Category:\n• OTC Medications: 45%\n• Prescription Drugs: 35%\n• Supplements: 20%') },
+									{ text: 'Expiry Report', onPress: () => Alert.alert('Expiry Report', 'MEDICATION EXPIRY TRACKING\n\n⚠️ EXPIRED (Action Required):\n• Cephalexin 500mg - 24 units\n• Hydrocortisone Cream - 8 units\n• Vitamin B Complex - 12 units\n\n🟡 EXPIRING THIS MONTH:\n• Metronidazole - 45 units (15 days)\n• Omeprazole - 32 units (22 days)\n• Losartan - 18 units (28 days)\n\n🟢 EXPIRING NEXT MONTH:\n• 45 different medications\n• Total value: $18,420') },
+									{ text: 'Financial Report', onPress: () => Alert.alert('Financial Report', 'PHARMACY FINANCIAL SUMMARY\n\n💰 Revenue This Month: $218,560\n💰 Profit Margin: 28.5%\n💰 Cost of Goods: $156,180\n\n📊 Payment Methods:\n• Insurance: 65% ($141,764)\n• Cash: 25% ($54,640)\n• Card: 10% ($21,856)\n\n📈 Growth Metrics:\n• Monthly Growth: +12.3%\n• YoY Growth: +18.7%\n• Customer Retention: 89.2%') },
+									{ text: 'Cancel', style: 'cancel' }
+								]
+							)}
 						>
 							<FontAwesome5 name="chart-line" size={30} color={Colors.BackgroundBlue} />
 							<Text style={styles.actionText}>View Reports</Text>

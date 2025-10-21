@@ -24,13 +24,13 @@ const LabDashboard = (props) => {
 		resultsReady: 12,
 		urgentTests: 6,
 		testQueue: [
-			{ id: '1', patient: 'John Smith', testType: 'Complete Blood Count', status: 'Sample Collected', priority: 'Urgent', doctor: 'Dr. Johnson' },
-			{ id: '2', patient: 'Mary Davis', testType: 'Lipid Profile', status: 'Processing', priority: 'Normal', doctor: 'Dr. Williams' },
-			{ id: '3', patient: 'Robert Wilson', testType: 'Thyroid Function', status: 'Pending Collection', priority: 'Normal', doctor: 'Dr. Brown' },
+			{ id: '1', patient: 'Rajesh Kumar', testType: 'Complete Blood Count', status: 'Sample Collected', priority: 'Urgent', doctor: 'Dr. Johnson' },
+			{ id: '2', patient: 'Priya Sharma', testType: 'Lipid Profile', status: 'Processing', priority: 'Normal', doctor: 'Dr. Williams' },
+			{ id: '3', patient: 'Sanjay Patel', testType: 'Thyroid Function', status: 'Pending Collection', priority: 'Normal', doctor: 'Dr. Brown' },
 		],
 		recentResults: [
-			{ id: '1', patient: 'Sarah Connor', test: 'Blood Sugar', result: '95 mg/dL', status: 'Normal', time: '2 hours ago' },
-			{ id: '2', patient: 'Mike Johnson', test: 'Hemoglobin', result: '14.2 g/dL', status: 'Normal', time: '3 hours ago' },
+			{ id: '1', patient: 'Neha Gupta', test: 'Blood Sugar', result: '95 mg/dL', status: 'Normal', time: '2 hours ago' },
+			{ id: '2', patient: 'Ankit Singh', test: 'Hemoglobin', result: '14.2 g/dL', status: 'Normal', time: '3 hours ago' },
 		],
 		equipmentStatus: [
 			{ id: '1', name: 'Hematology Analyzer', status: 'Online', lastMaintenance: '2 days ago' },

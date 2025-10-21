@@ -298,6 +298,111 @@ const AdminDashboard = (props) => {
 							<MaterialIcons name="backup" size={30} color="#1f2937" />
 							<Text style={styles.actionText}>Backup System</Text>
 						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.actionButton}
+							onPress={() => {
+								try {
+									console.log('Navigating to FeedbackAnalytics...');
+									props.navigation.navigate('FeedbackAnalytics');
+								} catch (error) {
+									console.error('Navigation error:', error);
+									alert('Navigation error: ' + error.message);
+								}
+							}}
+						>
+							<MaterialIcons name="analytics" size={30} color="#6366f1" />
+							<Text style={styles.actionText}>Feedback Analytics</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.actionButton}
+							onPress={() => {
+								try {
+									console.log('Navigating to MorningHuddle...');
+									props.navigation.navigate('MorningHuddle');
+								} catch (error) {
+									console.error('Navigation error:', error);
+									alert('Navigation error: ' + error.message);
+								}
+							}}
+						>
+							<MaterialCommunityIcons name="account-group" size={30} color="#06b6d4" />
+							<Text style={styles.actionText}>Morning Huddle</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.actionButton}
+							onPress={() => {
+								try {
+									console.log('Navigating to MarketingDashboard...');
+									props.navigation.navigate('MarketingDashboard');
+								} catch (error) {
+									console.error('Navigation error:', error);
+									alert('Navigation error: ' + error.message);
+								}
+							}}
+						>
+							<MaterialCommunityIcons name="bullhorn" size={30} color="#f59e0b" />
+							<Text style={styles.actionText}>Marketing</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.actionButton}
+							onPress={() => {
+								try {
+									console.log('Navigating to LeadershipTeam...');
+									props.navigation.navigate('LeadershipTeam');
+								} catch (error) {
+									console.error('Navigation error:', error);
+									alert('Navigation error: ' + error.message);
+								}
+							}}
+						>
+							<MaterialCommunityIcons name="account-star" size={30} color="#8b5cf6" />
+							<Text style={styles.actionText}>Leadership</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.actionButton}
+							onPress={() => {
+								try {
+									console.log('Navigating to QualityDashboard...');
+									props.navigation.navigate('QualityDashboard');
+								} catch (error) {
+									console.error('Navigation error:', error);
+									alert('Navigation error: ' + error.message);
+								}
+							}}
+						>
+							<MaterialCommunityIcons name="clipboard-check" size={30} color="#10b981" />
+							<Text style={styles.actionText}>Quality KPIs</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.actionButton}
+							onPress={() => {
+								try {
+									console.log('Navigating to NABHAccreditation...');
+									props.navigation.navigate('NABHAccreditation');
+								} catch (error) {
+									console.error('Navigation error:', error);
+									alert('Navigation error: ' + error.message);
+								}
+							}}
+						>
+							<MaterialCommunityIcons name="certificate" size={30} color="#dc2626" />
+							<Text style={styles.actionText}>NABH</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.actionButton}
+							onPress={() => {
+								try {
+									console.log('Navigating to SOPManagement...');
+									props.navigation.navigate('SOPManagement');
+								} catch (error) {
+									console.error('Navigation error:', error);
+									alert('Navigation error: ' + error.message);
+								}
+							}}
+						>
+							<MaterialCommunityIcons name="file-document-multiple" size={30} color="#0ea5e9" />
+							<Text style={styles.actionText}>SOPs</Text>
+						</TouchableOpacity>
 					</View>
 				</View>
 			</ScrollView>
