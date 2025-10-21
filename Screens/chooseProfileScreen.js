@@ -9,130 +9,263 @@ import {
 	TouchableOpacity,
 	Image,
 	ImageBackground,
+	SafeAreaView,
 } from "react-native";
 import Colors from "../constants/ThemeColors";
 import Input from "../Components/input";
 import { useDispatch, useSelector } from "react-redux";
+import { MaterialCommunityIcons, FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 const ProfileScreen = (props) => {
+	const userRoles = [
+		{
+			id: 'doctor',
+			title: 'Doctor',
+			subtitle: 'Medical Practitioner',
+			icon: 'stethoscope',
+			iconType: 'FontAwesome5',
+			color: '#6366f1',
+			navigation: 'auth'
+		},
+		{
+			id: 'patient',
+			title: 'Patient',
+			subtitle: 'Healthcare Seeker',
+			icon: 'account-heart',
+			iconType: 'MaterialCommunityIcons',
+			color: '#10b981',
+			navigation: 'auth'
+		},
+		{
+			id: 'nurse',
+			title: 'Nurse',
+			subtitle: 'Patient Care Specialist',
+			icon: 'medical-bag',
+			iconType: 'MaterialCommunityIcons',
+			color: '#f59e0b',
+			navigation: 'main',
+			directDashboard: 'NurseDashboard'
+		},
+		{
+			id: 'pharmacy',
+			title: 'Pharmacy',
+			subtitle: 'Medicine Management',
+			icon: 'pills',
+			iconType: 'FontAwesome5',
+			color: '#ef4444',
+			navigation: 'main',
+			directDashboard: 'PharmacyDashboard'
+		},
+		{
+			id: 'lab',
+			title: 'Lab Technician',
+			subtitle: 'Pathology & Testing',
+			icon: 'flask',
+			iconType: 'FontAwesome5',
+			color: '#8b5cf6',
+			navigation: 'main',
+			directDashboard: 'LabDashboard'
+		},
+		{
+			id: 'billing',
+			title: 'Billing Staff',
+			subtitle: 'Financial Services',
+			icon: 'credit-card',
+			iconType: 'FontAwesome5',
+			color: '#06b6d4',
+			navigation: 'main',
+			directDashboard: 'BillingDashboard'
+		},
+		{
+			id: 'reception',
+			title: 'Reception',
+			subtitle: 'Front Desk Services',
+			icon: 'desk',
+			iconType: 'MaterialCommunityIcons',
+			color: '#84cc16',
+			navigation: 'main',
+			directDashboard: 'ReceptionDashboard'
+		},
+		{
+			id: 'admin',
+			title: 'Administrator',
+			subtitle: 'System Management',
+			icon: 'settings',
+			iconType: 'Ionicons',
+			color: '#1f2937',
+			navigation: 'main',
+			directDashboard: 'AdminDashboard'
+		}
+	];
+
+	const renderIcon = (iconType, iconName, size, color) => {
+		switch (iconType) {
+			case 'FontAwesome5':
+				return <FontAwesome5 name={iconName} size={size} color={color} />;
+			case 'MaterialCommunityIcons':
+				return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+			case 'Ionicons':
+				return <Ionicons name={iconName} size={size} color={color} />;
+			default:
+				return <MaterialIcons name={iconName} size={size} color={color} />;
+		}
+	};
+
+	const handleRolePress = (item) => {
+		console.log('Role pressed:', item.title, item.id);
+
+		try {
+			if (item.directDashboard) {
+				console.log('Navigating to direct dashboard:', item.directDashboard);
+				// Navigate directly to main app and then to specific dashboard
+				// Using navigate instead of reset to preserve back navigation
+				props.navigation.navigate('main', {
+					screen: 'HomeTab',
+					params: {
+						screen: item.directDashboard,
+						params: { userTitle: item.id }
+					}
+				});
+			} else {
+				console.log('Navigating to auth with userTitle:', item.id);
+				// Navigate to login screen within the auth stack
+				props.navigation.navigate('login', {
+					userTitle: item.id,
+				});
+			}
+		} catch (error) {
+			console.error('Navigation error:', error);
+			alert(`Navigation failed for ${item.title}: ${error.message}`);
+		}
+	};
+
+	const renderRoleCard = ({ item }) => (
+		<TouchableOpacity
+			style={[styles.roleCard, { backgroundColor: item.color }]}
+			onPress={() => handleRolePress(item)}
+			activeOpacity={0.8}
+		>
+			<View style={styles.iconContainer}>
+				{renderIcon(item.iconType, item.icon, 32, 'white')}
+			</View>
+			<Text style={styles.roleTitle}>{item.title}</Text>
+			<Text style={styles.roleSubtitle}>{item.subtitle}</Text>
+		</TouchableOpacity>
+	);
+
 	return (
-		<View style={styles.screenTop}>
-			<View style={styles.ButtonsContainer}>
-				<View style={styles.TopButtonContainer}>
-					<TouchableOpacity
-						style={styles.TopButton}
-						onPress={() => {
-							props.navigation.navigate("login", {
-								userTitle: "doctor",
-							});
-						}}
-					>
-					
-						<Text style={styles.buttonText}> Doctor</Text>
-					</TouchableOpacity>
-				</View>
-				<View style={styles.BottomButtonContainer}>
-					<TouchableOpacity
-						style={styles.BottomButton}
-						onPress={() => {
-							props.navigation.navigate("login");
-						}}
-					>
-					
-						<Text style={styles.buttonText}> Patient</Text>
-					</TouchableOpacity>
-				</View>
+		<SafeAreaView style={styles.container}>
+			<View style={styles.header}>
+				<Text style={styles.headerTitle}>Hope Hospital</Text>
+				<Text style={styles.headerSubtitle}>Choose Your Role</Text>
 			</View>
-			<View style={styles.ImageContainer}>
-				<ImageBackground
-					source={require("../assets/images/medicine.png")}
-					style={styles.image}
-				></ImageBackground>
+
+			<FlatList
+				data={userRoles}
+				renderItem={renderRoleCard}
+				numColumns={2}
+				showsVerticalScrollIndicator={false}
+				contentContainerStyle={styles.roleGrid}
+				columnWrapperStyle={styles.row}
+			/>
+
+			<View style={styles.footer}>
+				<Text style={styles.footerText}>Hospital Management System</Text>
 			</View>
-		</View>
+		</SafeAreaView>
 	);
 };
 
 const styles = StyleSheet.create({
-	screenTop: {
+	container: {
 		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
-		backgroundColor: "white",
+		backgroundColor: '#f8fafc',
+		paddingTop: Platform.OS === 'ios' ? 0 : 20,
 	},
-	ButtonsContainer: {
-		flexDirection: "row",
+	header: {
+		paddingVertical: 30,
+		paddingHorizontal: 20,
+		backgroundColor: '#6366f1',
+		borderBottomLeftRadius: 25,
+		borderBottomRightRadius: 25,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 4 },
+		shadowOpacity: 0.1,
+		shadowRadius: 8,
+		elevation: 8,
+		alignItems: 'center',
 	},
-
-	text: {
-		fontSize: 25,
-		fontWeight: "bold",
-		color: Colors.HomeScreenText,
+	headerTitle: {
+		fontSize: 32,
+		fontWeight: '700',
+		color: 'white',
+		letterSpacing: 0.5,
+		marginBottom: 5,
 	},
-	TopButton: {
-		width: 180,
-		height: 250,
-		backgroundColor: Colors.BackgroundBlue,
-		justifyContent: "center",
-		alignItems: "center",
-		elevation:12,
+	headerSubtitle: {
+		fontSize: 16,
+		color: '#e0e7ff',
+		fontWeight: '400',
+	},
+	roleGrid: {
+		paddingHorizontal: 15,
+		paddingVertical: 20,
+		flexGrow: 1,
+	},
+	row: {
+		justifyContent: 'space-between',
+		marginBottom: 15,
+	},
+	roleCard: {
+		flex: 0.48,
+		aspectRatio: 1,
 		borderRadius: 20,
-		shadowColor: Colors.BackgroundBlue,
-		shadowOffset: { width: 7, height: 10 },
-		shadowOpacity: 0.7,
-		shadowRadius: 9,
-
+		padding: 20,
+		alignItems: 'center',
+		justifyContent: 'center',
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 8 },
+		shadowOpacity: 0.15,
+		shadowRadius: 12,
+		elevation: 8,
+		marginBottom: 10,
 	},
-	BottomButton: {
-		width: 180,
-		height: 250,
-		backgroundColor: '#035aa6',
-		justifyContent: "center",
-		alignItems: "center",
-		elevation:12,
-		borderRadius: 20,
-		shadowColor: '#035aa6',
-		shadowOffset: { width: 4, height: 10 },
-		shadowOpacity: 0.7,
-		shadowRadius: 9,
+	iconContainer: {
+		width: 60,
+		height: 60,
+		borderRadius: 30,
+		backgroundColor: 'rgba(255,255,255,0.2)',
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginBottom: 12,
 	},
-	buttonText: {
-		fontSize: 28,
-		fontWeight: "bold",
-		color: "white",
-		textAlign: "center",
+	roleTitle: {
+		fontSize: 16,
+		fontWeight: '700',
+		color: 'white',
+		textAlign: 'center',
+		marginBottom: 4,
+		letterSpacing: 0.3,
 	},
-	image: {
-		resizeMode: "contain",
-		width: 400,
-		height: 350,
-		justifyContent: "flex-start",
-		alignItems: "center",
+	roleSubtitle: {
+		fontSize: 12,
+		color: 'rgba(255,255,255,0.9)',
+		textAlign: 'center',
+		fontWeight: '500',
+		lineHeight: 16,
 	},
-	TopButtonContainer: {
-		marginLeft: 20,
+	footer: {
+		paddingVertical: 20,
+		paddingHorizontal: 20,
+		alignItems: 'center',
+		backgroundColor: 'white',
+		borderTopWidth: 1,
+		borderTopColor: '#e5e7eb',
 	},
-	BottomButtonContainer: {
-		flex: 1,
-		// marginTop:50,
-		alignItems: "center",
-	},
-	ImageContainer: {
-		width: 400,
-		height: 350,
-		paddingTop: 160,
-		
-	},
-	Buttonimage: {
-		width:120,
-		height:150,
-
-	},
-	Buttonimage2: {
-		width:120,
-		height:150,
-		marginBottom:25,
-
+	footerText: {
+		fontSize: 14,
+		color: '#6b7280',
+		fontWeight: '500',
 	},
 });
 

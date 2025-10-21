@@ -52,7 +52,15 @@ const AuthScreen = (props) => {
 	const signinHandler = async()=>{
 		try{
 			await dispatch(AuthActions.Login(email,password));
-			props.navigation.navigate('main');
+
+			// Navigate to role-specific dashboard
+			props.navigation.navigate('main', {
+				screen: 'HomeTab',
+				params: {
+					screen: 'home',
+					params: { userTitle: Usertitle || 'patient' }
+				}
+			});
 
 		}catch(err){
 			setError(err.message);
@@ -70,7 +78,14 @@ const AuthScreen = (props) => {
 			<View style={styles.screenTop}>
 				<View style={styles.GreetingsContainer}>
 					<Text style={styles.Titletext}>
-					{Usertitle === 'doctor' ? 'Doctor' : 'Patient'}  
+					{Usertitle === 'doctor' ? 'Doctor' :
+					 Usertitle === 'patient' ? 'Patient' :
+					 Usertitle === 'nurse' ? 'Nurse' :
+					 Usertitle === 'pharmacy' ? 'Pharmacy Staff' :
+					 Usertitle === 'lab' ? 'Lab Technician' :
+					 Usertitle === 'billing' ? 'Billing Staff' :
+					 Usertitle === 'reception' ? 'Reception' :
+					 Usertitle === 'admin' ? 'Administrator' : 'User'}
 					{signup ? ' Sign Up' : ' Sign In'}
 					</Text>
 
@@ -174,17 +189,16 @@ const styles = StyleSheet.create({
 		color: Colors.HomeScreenText,
 	},
 	Titletext: {
-		fontSize: 50,
+		fontSize: 38,
 		fontWeight: "200",
 		color: Colors.HomeScreenText,
 	},
 	GreetingsContainer: {
 		justifyContent: "center",
-		// alignItems: "center",
-		marginLeft:Platform.OS === "ios" ? 70 : 30,
+		alignItems: "center",
 		width:350,
 		height:100,
-		
+
 	},
 	loginForm: {
 		width:Platform.OS === "ios" ? 400 : '100%',
@@ -195,22 +209,17 @@ const styles = StyleSheet.create({
 	UsernameContainer: {
 		flexDirection: "row",
 		width:300,
-		height:50,
+		height:80,
 		marginBottom:20,
-		// justifyContent: "center",
 		alignItems: "center",
-		
 		marginTop:90
 	},
 	PasswordContainer: {
 		flexDirection: "row",
 		width:300,
-		height:50,
-
+		height:80,
 		marginBottom:20,
-		// justifyContent: "center",
 		alignItems: "center",
-		
 		marginTop:40,
 	},
 	LoginButton: {
@@ -218,9 +227,7 @@ const styles = StyleSheet.create({
 		height:50,
 		backgroundColor:Platform.OS === 'ios' ? Colors.MedBlue : Colors.BackgroundBlue,
 		justifyContent: "center",
-		// alignItems: "center",
-		// marginLeft:120,
-		paddingLeft:Platform.OS === "android" ? 120 : 130,
+		alignItems: "center",
 		marginTop:40,
 		borderRadius:35,
 
@@ -233,7 +240,8 @@ const styles = StyleSheet.create({
 	iconContainer: {
 		width:30,
 		height:60,
-		justifyContent: "flex-end",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 	HomeIconContainer:{
 		width:80,

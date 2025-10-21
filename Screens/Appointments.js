@@ -340,17 +340,17 @@ const styles = StyleSheet.create({
 	SubmitButton: {
 		width: 250,
 		height: 60,
-		borderRadius:Platform.OS === 'ios' ? 10 : 0,
+		borderRadius: 10,
 		backgroundColor: Colors.BackgroundBlue,
 		justifyContent: "center",
-		// alignItems: "center",
-		paddingLeft:Platform.OS === 'ios' ? 40 : 35,
+		alignItems: "center",
 		marginTop: 30,
 	},
 	SubmitButtonText: {
 		fontSize: 20,
 		fontWeight: "200",
 		color: Colors.HomeScreenText,
+		textAlign: "center",
 	},
 	ButtonsContainer: {
 		justifyContent: "center",
@@ -376,14 +376,13 @@ const styles = StyleSheet.create({
 	DatePicker: {
 		width: 150,
 		height: 40,
-		borderRadius:Platform.OS == 'ios' ? 10 : 0,
+		borderRadius: 10,
 		marginRight: 20,
 		backgroundColor: "blue",
 		marginLeft: 20,
 		marginTop: 20,
 		justifyContent: "center",
-		paddingLeft:Platform.OS ==='ios' ? 55 : 50,
-		// alignItems: "center",
+		alignItems: "center",
 	},
 	label: {
 		fontSize: 20,
