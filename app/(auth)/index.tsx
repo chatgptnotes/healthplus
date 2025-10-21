@@ -10,11 +10,12 @@ import {
 	Image,
 	ImageBackground,
 } from "react-native";
-import Colors from "../constants/ThemeColors";
-import Input from "../Components/input";
+import Colors from "../../constants/ThemeColors";
+import Input from "../../Components/input";
 import { useDispatch, useSelector } from "react-redux";
+import { router } from 'expo-router';
 
-const ProfileScreen = (props) => {
+const ProfileScreen = () => {
 	return (
 		<View style={styles.screenTop}>
 			<View style={styles.ButtonsContainer}>
@@ -22,12 +23,15 @@ const ProfileScreen = (props) => {
 					<TouchableOpacity
 						style={styles.TopButton}
 						onPress={() => {
-							props.navigation.navigate("login", {
-								userTitle: "doctor",
+							router.push({
+								pathname: '/login',
+								params: {
+									userTitle: "doctor",
+								},
 							});
 						}}
 					>
-					
+
 						<Text style={styles.buttonText}> Doctor</Text>
 					</TouchableOpacity>
 				</View>
@@ -35,17 +39,17 @@ const ProfileScreen = (props) => {
 					<TouchableOpacity
 						style={styles.BottomButton}
 						onPress={() => {
-							props.navigation.navigate("login");
+							router.push("/login");
 						}}
 					>
-					
+
 						<Text style={styles.buttonText}> Patient</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
 			<View style={styles.ImageContainer}>
 				<ImageBackground
-					source={require("../assets/images/medicine.png")}
+					source={require("../../assets/images/medicine.png")}
 					style={styles.image}
 				></ImageBackground>
 			</View>
@@ -73,8 +77,9 @@ const styles = StyleSheet.create({
 		width: 180,
 		height: 250,
 		backgroundColor: Colors.BackgroundBlue,
-		justifyContent: "center",
-		alignItems: "center",
+		justifyContent: "space-around",
+		paddingLeft:10,
+		// alignItems: "center",
 		elevation:12,
 		borderRadius: 20,
 		shadowColor: Colors.BackgroundBlue,
@@ -88,7 +93,8 @@ const styles = StyleSheet.create({
 		height: 250,
 		backgroundColor: '#035aa6',
 		justifyContent: "center",
-		alignItems: "center",
+		// alignItems: "center",
+		paddingLeft:6,
 		elevation:12,
 		borderRadius: 20,
 		shadowColor: '#035aa6',
@@ -97,10 +103,9 @@ const styles = StyleSheet.create({
 		shadowRadius: 9,
 	},
 	buttonText: {
-		fontSize: 28,
+		fontSize: 45,
 		fontWeight: "bold",
 		color: "white",
-		textAlign: "center",
 	},
 	image: {
 		resizeMode: "contain",

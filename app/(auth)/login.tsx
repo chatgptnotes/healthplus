@@ -23,20 +23,22 @@ import {
 	Alert,
 
 } from "react-native";
-import Colors from "../constants/ThemeColors";
-import Input from "../Components/input";
+import Colors from "../../constants/ThemeColors";
+import Input from "../../Components/input";
 import { useDispatch } from "react-redux";
-import * as AppointmentActions from "../store/actions/appointmentAction";
+import * as AppointmentActions from "../../store/actions/appointmentAction";
 import { EvilIcons, MaterialIcons } from '@expo/vector-icons';
-import * as AuthActions from '../store/actions/AuthActions';
+import * as AuthActions from '../../store/actions/AuthActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router, useLocalSearchParams } from 'expo-router';
 
 
 
 
 
-const AuthScreen = (props) => {
 
+const AuthScreen = () => {
+	const { userTitle } = useLocalSearchParams();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
@@ -52,13 +54,13 @@ const AuthScreen = (props) => {
 	const signinHandler = async()=>{
 		try{
 			await dispatch(AuthActions.Login(email,password));
-			props.navigation.navigate('main');
+			router.replace('/(tabs)');
 
 		}catch(err){
 			setError(err.message);
 		}
 	}
-	const Usertitle = props.route?.params?.userTitle
+	const Usertitle = userTitle
 	if(error){
 		Alert.alert('There was an error',error,[{text:'okay'}]);
 	}
@@ -76,7 +78,7 @@ const AuthScreen = (props) => {
 
 				</View>
 				<TouchableOpacity style={styles.HomeIconContainer} onPress={()=>{
-					props.navigation.navigate('chooseProfileScreen');
+					router.push('/(auth)');
 				}}>
 				<MaterialIcons name="home" size={70} color="white" />
 				</TouchableOpacity>
@@ -127,7 +129,7 @@ const AuthScreen = (props) => {
 				<View style={{marginTop:20, flexDirection: 'row'}}>
 				<Text style={{color:Colors.RedButton, fontSize:17}}> Don't have an account?</Text>
 				<TouchableWithoutFeedback onPress={()=>{
-					props.navigation.navigate('signup')
+					router.push('/signup')
 				}}>
 				<Text style={{color:Colors.BackgroundBlue, fontSize:17}}> Sign Up</Text>
 				</TouchableWithoutFeedback>

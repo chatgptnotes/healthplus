@@ -46,12 +46,12 @@ const styles = StyleSheet.create({
 			marginLeft:20,
 			alignItems:'flex-start',
 			width:'90%',
-			height:40,
-			
-			
+			height:50,
+			paddingVertical:5,
+
 			borderBottomColor:Colors.RedButton,
 			borderBottomWidth:0.5,
-			
+
 		},
 		InputContainer:{
 			flex:1,

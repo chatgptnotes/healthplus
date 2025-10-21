@@ -22,21 +22,23 @@ import {
 	
 	Alert,
 } from "react-native";
-import Colors from "../constants/ThemeColors";
-import Input from "../Components/input";
+import Colors from "../../constants/ThemeColors";
+import Input from "../../Components/input";
 import { useDispatch } from "react-redux";
-import * as AppointmentActions from "../store/actions/appointmentAction";
-import * as AuthActions from '../store/actions/AuthActions';
-import * as PatientActions from '../store/actions/PatientAction';
+import * as AppointmentActions from "../../store/actions/appointmentAction";
+import * as AuthActions from '../../store/actions/AuthActions';
+import * as PatientActions from '../../store/actions/PatientAction';
 
 import { EvilIcons } from '@expo/vector-icons';
+import { router, useLocalSearchParams } from 'expo-router';
 
 
 
 
 
-const SignUpScreen = (props) => {
-	
+const SignUpScreen = () => {
+	const { userTitle } = useLocalSearchParams();
+
 	const [name, setName] = useState('');
 	const [contact, setContact] = useState('');
 	const [email, setEmail] = useState('');
@@ -49,7 +51,7 @@ const SignUpScreen = (props) => {
 		try{
 			await dispatch(AuthActions.SignUp(email,password));
 			await dispatch(PatientActions.CreatePatient(name,email,contact))
-			props.navigation.navigate('auth');
+			router.push('/(auth)');
 		}catch(err){
 			setError(err.message);
 		}
@@ -57,7 +59,7 @@ const SignUpScreen = (props) => {
 
 
 	const dispatch = useDispatch();
-	const Usertitle = props.route?.params?.userTitle
+	const Usertitle = userTitle
 	if (error){
 		Alert.alert('Error in Form',error,[{text:'okay'}]);
 	}
@@ -150,7 +152,7 @@ const SignUpScreen = (props) => {
 				<View style={{marginTop:20, flexDirection: 'row'}}>
 				<Text style={{color:Colors.RedButton, fontSize:17}}>Already have an Account?</Text>
 				<TouchableWithoutFeedback onPress={()=>{
-					props.navigation.navigate('auth');
+					router.push('/(auth)');
 
 				}}>
 				<Text style={{color:Colors.BackgroundBlue, fontSize:17}}> Sign In</Text>
@@ -214,23 +216,26 @@ const styles = StyleSheet.create({
 		width:400,
 		height:500,
 		alignItems: "center",
-		justifyContent: "flex-start",
-		paddingTop: 20
+		justifyContent: "center"
 	},
 	UsernameContainer: {
 		flexDirection: "row",
 		width:300,
-		height:80,
+		height:50,
 		marginBottom:20,
+		// justifyContent: "center",
 		alignItems: "center",
-		marginTop:50
+		
+		marginTop:30
 	},
 	PasswordContainer: {
 		flexDirection: "row",
 		width:300,
-		height:80,
+		height:50,
 		marginBottom:20,
+		// justifyContent: "center",
 		alignItems: "center",
+		
 		marginTop:30,
 	},
 	LoginButton: {
@@ -252,8 +257,7 @@ const styles = StyleSheet.create({
 	iconContainer: {
 		width:40,
 		height:60,
-		justifyContent: "center",
-		alignItems: "center",
+		justifyContent: "flex-end",
 	},
 	
 });
