@@ -230,8 +230,8 @@ const NABHAccreditation = (props) => {
 	const statusIcons = {
 		excellent: 'check-circle',
 		compliant: 'check',
-		needs_improvement: 'alert-triangle',
-		non_compliant: 'x-circle'
+		needs_improvement: 'alert-triangle-outline',
+		non_compliant: 'close-circle'
 	};
 
 	const priorityColors = {
@@ -292,7 +292,7 @@ const NABHAccreditation = (props) => {
 					<Text style={styles.statLabel}>Compliant Standards</Text>
 				</View>
 				<View style={styles.statCard}>
-					<MaterialCommunityIcons name="alert-triangle" size={24} color="#f59e0b" />
+					<MaterialCommunityIcons name="alert-triangle-outline" size={24} color="#f59e0b" />
 					<Text style={styles.statValue}>
 						{nabhStandards.filter(s => s.status === 'needs_improvement').length}
 					</Text>

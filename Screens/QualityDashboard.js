@@ -192,8 +192,8 @@ const QualityDashboard = (props) => {
 	const statusIcons = {
 		excellent: 'check-circle',
 		good: 'alert-circle',
-		warning: 'alert-triangle',
-		critical: 'x-circle'
+		warning: 'alert-triangle-outline',
+		critical: 'close-circle'
 	};
 
 	const trendIcons = {

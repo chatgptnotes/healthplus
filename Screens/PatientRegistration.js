@@ -8,10 +8,10 @@ import {
 	TouchableOpacity,
 	Alert,
 	ActivityIndicator,
-	SafeAreaView,
-	Picker,
 	Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';

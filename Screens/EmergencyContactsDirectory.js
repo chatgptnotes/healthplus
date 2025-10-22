@@ -7,10 +7,10 @@ import {
 	TouchableOpacity,
 	FlatList,
 	Alert,
-	SafeAreaView,
 	Linking,
 	TextInput,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import Colors from '../constants/ThemeColors';
 
