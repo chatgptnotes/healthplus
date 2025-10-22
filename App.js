@@ -1,5 +1,5 @@
 import 'react-native-url-polyfill/auto';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, AppRegistry, TouchableOpacity } from 'react-native';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -7,6 +7,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import * as SplashScreen from 'expo-splash-screen';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+// Import custom splash screen component
+import HopeHospitalSplash from './components/HopeHospitalSplash';
 
 import AppointmentReducer from './store/reducers/appointmentReducer';
 import AuthReducer from './store/reducers/AuthReducer';
@@ -470,16 +475,59 @@ function TabNavigator() {
   );
 }
 
+// Keep splash screen visible while app is loading
+SplashScreen.preventAutoHideAsync();
+
 export default function App() {
+  const [isAppReady, setIsAppReady] = useState(false);
+  const [showCustomSplash, setShowCustomSplash] = useState(true);
+
+  useEffect(() => {
+    async function prepareApp() {
+      try {
+        // Pre-load fonts, make any API calls you need to do here
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate loading time
+
+        // Tell the application to render
+        setIsAppReady(true);
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    prepareApp();
+  }, []);
+
+  useEffect(() => {
+    if (isAppReady) {
+      // Hide the system splash screen once the app is ready
+      SplashScreen.hideAsync();
+    }
+  }, [isAppReady]);
+
+  const onCustomSplashFinish = () => {
+    setShowCustomSplash(false);
+  };
+
+  if (!isAppReady || showCustomSplash) {
+    return (
+      <SafeAreaProvider>
+        <HopeHospitalSplash onFinish={isAppReady ? onCustomSplashFinish : null} />
+      </SafeAreaProvider>
+    );
+  }
+
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="auth" component={AuthStack} />
-          <Stack.Screen name="main" component={TabNavigator} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Provider>
+    <SafeAreaProvider>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="auth" component={AuthStack} />
+            <Stack.Screen name="main" component={TabNavigator} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+    </SafeAreaProvider>
   );
 }
 

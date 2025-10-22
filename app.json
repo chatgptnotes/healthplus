@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "ClinicManagement",
-    "slug": "ClinicManagement",
+    "name": "Hope Hospital Management",
+    "slug": "HopeHospitalManagement",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/SplashScreen1.png",
+      "image": "./assets/hope-hospital-logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -16,14 +16,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.clinicmanagement"
+      "bundleIdentifier": "com.hopehospital.management"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.yourcompany.clinicmanagement"
+      "package": "com.hopehospital.management"
     },
     "web": {
       "bundler": "metro",
