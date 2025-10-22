@@ -11,7 +11,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Import custom splash screen component
-import HopeHospitalSplash from './components/HopeHospitalSplash';
+import HopeHospitalSplash from './Components/HopeHospitalSplash';
 
 import AppointmentReducer from './store/reducers/appointmentReducer';
 import AuthReducer from './store/reducers/AuthReducer';

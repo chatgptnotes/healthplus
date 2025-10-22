@@ -77,20 +77,12 @@ const HopeHospitalSplash = ({ onFinish }) => {
           },
         ]}
       >
-        {/* Placeholder for logo - replace with actual Hope Hospital logo */}
-        <View style={styles.logoPlaceholder}>
-          <View style={styles.logoSymbol}>
-            <View style={styles.redLine} />
-            <View style={styles.blueLine} />
-            <View style={styles.connectingLine} />
-          </View>
-          <Text style={styles.doctorText}>Dr. Murali's</Text>
-          <View style={styles.hospitalNameContainer}>
-            <Text style={styles.hopeText}>HOPE</Text>
-            <Text style={styles.hospitalText}>HOSPITAL</Text>
-          </View>
-          <Text style={styles.taglineText}>Assured | Committed | Proficient</Text>
-        </View>
+        {/* Actual Hope Hospital Logo */}
+        <Image
+          source={require('../assets/hope-hospital-logo.png')}
+          style={styles.logoImage}
+          resizeMode="contain"
+        />
       </Animated.View>
 
       <Animated.View
@@ -132,76 +124,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
   },
-  logoPlaceholder: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoSymbol: {
-    width: 120,
-    height: 80,
-    position: 'relative',
-    marginBottom: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  redLine: {
-    position: 'absolute',
-    left: 30,
-    top: 10,
-    width: 8,
-    height: 60,
-    backgroundColor: '#dc2626',
-    borderRadius: 4,
-  },
-  blueLine: {
-    position: 'absolute',
-    right: 30,
-    top: 10,
-    width: 8,
-    height: 60,
-    backgroundColor: '#1e40af',
-    borderRadius: 4,
-  },
-  connectingLine: {
-    position: 'absolute',
-    top: 35,
-    left: 35,
-    right: 35,
-    height: 8,
-    backgroundColor: '#1e40af',
-    borderRadius: 4,
-  },
-  doctorText: {
-    fontSize: 24,
-    color: '#2563eb',
-    fontWeight: '600',
-    marginBottom: 5,
-    fontFamily: 'Arial',
-  },
-  hospitalNameContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  hopeText: {
-    fontSize: 48,
-    fontWeight: '800',
-    color: '#dc2626',
-    marginRight: 0,
-    letterSpacing: -2,
-  },
-  hospitalText: {
-    fontSize: 48,
-    fontWeight: '800',
-    color: '#1e40af',
-    letterSpacing: -2,
-  },
-  taglineText: {
-    fontSize: 16,
-    color: '#6b7280',
-    fontWeight: '500',
-    textAlign: 'center',
-    marginTop: 5,
+  logoImage: {
+    width: width * 0.8,
+    height: height * 0.4,
+    maxWidth: 400,
+    maxHeight: 300,
   },
   loadingContainer: {
     position: 'absolute',
