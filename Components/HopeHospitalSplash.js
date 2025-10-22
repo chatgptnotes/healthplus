@@ -77,14 +77,16 @@ const HopeHospitalSplash = ({ onFinish }) => {
           },
         ]}
       >
-        {/* Hope Hospital Logo with fallback */}
+        {/* Hope Hospital Logo */}
         <View style={styles.logoWrapper}>
           <Image
             source={require('../assets/hope-hospital-logo.png')}
             style={styles.logoImage}
             resizeMode="contain"
-            onError={(error) => console.log('Logo load error:', error)}
-            onLoad={() => console.log('Logo loaded successfully')}
+            onError={(error) => console.log('Logo load error:', error.nativeEvent)}
+            onLoad={() => console.log('Hope Hospital logo loaded successfully')}
+            onLoadStart={() => console.log('Starting to load Hope Hospital logo')}
+            onLoadEnd={() => console.log('Finished loading Hope Hospital logo')}
           />
         </View>
       </Animated.View>
@@ -131,16 +133,16 @@ const styles = StyleSheet.create({
   logoWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: width * 0.8,
-    height: height * 0.4,
-    maxWidth: 400,
-    maxHeight: 300,
+    width: width * 0.85,
+    height: height * 0.5,
+    maxWidth: 450,
+    maxHeight: 350,
   },
   logoImage: {
     width: '100%',
     height: '100%',
-    maxWidth: 400,
-    maxHeight: 300,
+    maxWidth: 450,
+    maxHeight: 350,
   },
   loadingContainer: {
     position: 'absolute',

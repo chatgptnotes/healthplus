@@ -513,7 +513,7 @@ export default function App() {
   if (!isAppReady || showCustomSplash) {
     return (
       <SafeAreaProvider>
-        <SimpleSplash onFinish={isAppReady ? onCustomSplashFinish : null} />
+        <HopeHospitalSplash onFinish={isAppReady ? onCustomSplashFinish : null} />
       </SafeAreaProvider>
     );
   }
