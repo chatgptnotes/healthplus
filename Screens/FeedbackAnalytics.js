@@ -51,7 +51,7 @@ const FeedbackAnalytics = (props) => {
 		recentFeedbacks: [
 			{
 				id: '1',
-				patient: 'John D.',
+				patient: 'Rajesh K.',
 				department: 'Cardiology',
 				overallRating: 5,
 				date: '2024-10-20',
@@ -60,7 +60,7 @@ const FeedbackAnalytics = (props) => {
 			},
 			{
 				id: '2',
-				patient: 'Sarah M.',
+				patient: 'Priya S.',
 				department: 'Emergency',
 				overallRating: 3,
 				date: '2024-10-20',

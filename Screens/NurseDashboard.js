@@ -24,13 +24,13 @@ const NurseDashboard = (props) => {
 		vitalsOverdue: 5,
 		emergencyAlerts: 2,
 		patientQueue: [
-			{ id: '1', name: 'Alice Johnson', room: '301A', status: 'Medication Due', time: '10:30 AM', priority: 'High' },
-			{ id: '2', name: 'Bob Smith', room: '302B', status: 'Vitals Check', time: '11:00 AM', priority: 'Normal' },
-			{ id: '3', name: 'Carol Davis', room: '303A', status: 'Dressing Change', time: '11:30 AM', priority: 'Normal' },
+			{ id: '1', name: 'Sunita Devi', room: '301A', status: 'Medication Due', time: '10:30 AM', priority: 'High' },
+			{ id: '2', name: 'Ramesh Gupta', room: '302B', status: 'Vitals Check', time: '11:00 AM', priority: 'Normal' },
+			{ id: '3', name: 'Kavita Sharma', room: '303A', status: 'Dressing Change', time: '11:30 AM', priority: 'Normal' },
 		],
 		recentVitals: [
-			{ id: '1', patient: 'Alice Johnson', bp: '120/80', temp: '98.6°F', pulse: '72', time: '9:45 AM' },
-			{ id: '2', patient: 'Bob Smith', bp: '130/85', temp: '99.1°F', pulse: '78', time: '9:30 AM' },
+			{ id: '1', patient: 'Sunita Devi', bp: '120/80', temp: '98.6°F', pulse: '72', time: '9:45 AM' },
+			{ id: '2', patient: 'Ramesh Gupta', bp: '130/85', temp: '99.1°F', pulse: '78', time: '9:30 AM' },
 		]
 	});
 
@@ -99,19 +99,19 @@ const NurseDashboard = (props) => {
 				<View style={styles.statsContainer}>
 					{renderStatCard('Assigned Patients', dashboardData.assignedPatients, 'people', '#f59e0b', () => Alert.alert(
 						'Assigned Patients Overview',
-						'Patient assignment details for today:\n\n👥 TOTAL ASSIGNED: 15 patients\n\n🏥 BY ROOM:\n• Room 301A - Alice Johnson (High Priority)\n• Room 302B - Bob Smith (Medication Due)\n• Room 303A - Carol Davis (Dressing Change)\n• Room 304B - David Wilson (Post-Op)\n• Room 305A - Emma Brown (Vitals Due)\n\n📊 PATIENT STATUS:\n• Stable: 12 patients\n• Requires Monitoring: 2 patients\n• Critical: 1 patient\n\n⏰ UPCOMING TASKS:\n• Medication rounds: 8 patients\n• Vital checks: 5 patients\n• Procedures: 2 patients',
+						'Patient assignment details for today:\n\n👥 TOTAL ASSIGNED: 15 patients\n\n🏥 BY ROOM:\n• Room 301A - Sunita Devi (High Priority)\n• Room 302B - Ramesh Gupta (Medication Due)\n• Room 303A - Kavita Sharma (Dressing Change)\n• Room 304B - Sunil Kumar (Post-Op)\n• Room 305A - Geeta Singh (Vitals Due)\n\n📊 PATIENT STATUS:\n• Stable: 12 patients\n• Requires Monitoring: 2 patients\n• Critical: 1 patient\n\n⏰ UPCOMING TASKS:\n• Medication rounds: 8 patients\n• Vital checks: 5 patients\n• Procedures: 2 patients',
 						[
-							{ text: 'View Patient List', onPress: () => Alert.alert('Patient List', 'Detailed patient assignments:\n\n1. Alice Johnson - Room 301A\n   - Medications due: 2:00 PM\n   - Last vitals: 1 hour ago\n   - Notes: Monitor BP\n\n2. Bob Smith - Room 302B\n   - Medications due: Now\n   - Last vitals: 3 hours ago\n   - Notes: Diabetes management\n\n3. Carol Davis - Room 303A\n   - Dressing change due: 3:00 PM\n   - Last vitals: 2 hours ago\n   - Notes: Post-surgical care') },
+							{ text: 'View Patient List', onPress: () => Alert.alert('Patient List', 'Detailed patient assignments:\n\n1. Sunita Devi - Room 301A\n   - Medications due: 2:00 PM\n   - Last vitals: 1 hour ago\n   - Notes: Monitor BP\n\n2. Ramesh Gupta - Room 302B\n   - Medications due: Now\n   - Last vitals: 3 hours ago\n   - Notes: Diabetes management\n\n3. Kavita Sharma - Room 303A\n   - Dressing change due: 3:00 PM\n   - Last vitals: 2 hours ago\n   - Notes: Post-surgical care') },
 							{ text: 'Reassign Patients', onPress: () => Alert.alert('Patient Reassignment', 'Requesting supervisor for patient reassignment.\n\nCurrent load: 15 patients\nRecommended load: 12 patients\n\nSupervisor will be notified to balance assignments.') },
 							{ text: 'OK' }
 						]
 					))}
 					{renderStatCard('Pending Medications', dashboardData.pendingMedications, 'medication', '#ef4444', () => Alert.alert(
 						'Pending Medications - Action Required',
-						'🔴 URGENT MEDICATIONS DUE:\n\n💊 NOW OVERDUE:\n• Bob Smith (Room 302B) - Metformin 500mg\n• David Wilson (Room 304B) - Pain medication\n\n⏰ DUE WITHIN 30 MINUTES:\n• Alice Johnson (Room 301A) - Lisinopril 10mg\n• Emma Brown (Room 305A) - Insulin injection\n• Carol Davis (Room 303A) - Antibiotic\n\n🟡 DUE THIS HOUR:\n• Patient in Room 306A - Vitamin supplements\n• Patient in Room 307B - Blood thinner\n• Patient in Room 308A - Heart medication',
+						'🔴 URGENT MEDICATIONS DUE:\n\n💊 NOW OVERDUE:\n• Ramesh Gupta (Room 302B) - Metformin 500mg\n• Sunil Kumar (Room 304B) - Pain medication\n\n⏰ DUE WITHIN 30 MINUTES:\n• Sunita Devi (Room 301A) - Lisinopril 10mg\n• Geeta Singh (Room 305A) - Insulin injection\n• Kavita Sharma (Room 303A) - Antibiotic\n\n🟡 DUE THIS HOUR:\n• Patient in Room 306A - Vitamin supplements\n• Patient in Room 307B - Blood thinner\n• Patient in Room 308A - Heart medication',
 						[
-							{ text: 'Start Medication Round', onPress: () => Alert.alert('Medication Round Started', 'Starting systematic medication distribution:\n\n✓ Overdue medications prioritized\n✓ Patient identity verification required\n✓ Medication scanner ready\n✓ Documentation system active\n\nFirst stop: Room 302B - Bob Smith\nMedication: Metformin 500mg') },
-							{ text: 'Mark as Administered', onPress: () => Alert.alert('Medication Administration', 'Select patient to mark medication as given:\n\n• Bob Smith - Metformin\n• David Wilson - Pain med\n• Alice Johnson - Lisinopril\n• Emma Brown - Insulin\n\nRequires electronic signature and timestamp.') },
+							{ text: 'Start Medication Round', onPress: () => Alert.alert('Medication Round Started', 'Starting systematic medication distribution:\n\n✓ Overdue medications prioritized\n✓ Patient identity verification required\n✓ Medication scanner ready\n✓ Documentation system active\n\nFirst stop: Room 302B - Ramesh Gupta\nMedication: Metformin 500mg') },
+							{ text: 'Mark as Administered', onPress: () => Alert.alert('Medication Administration', 'Select patient to mark medication as given:\n\n• Ramesh Gupta - Metformin\n• Sunil Kumar - Pain med\n• Sunita Devi - Lisinopril\n• Geeta Singh - Insulin\n\nRequires electronic signature and timestamp.') },
 							{ text: 'Request Pharmacy', onPress: () => Alert.alert('Pharmacy Request', 'Requesting pharmacy for missing medications:\n\n• 2 medications out of stock\n• 1 medication needs preparation\n• Estimated delivery: 15 minutes\n\nPharmacy has been notified.') },
 							{ text: 'OK' }
 						]
@@ -128,10 +128,10 @@ const NurseDashboard = (props) => {
 					))}
 					{renderStatCard('Emergency Alerts', dashboardData.emergencyAlerts, 'warning', '#dc2626', () => Alert.alert(
 						'Active Emergency Alerts',
-						'🚨 CURRENT EMERGENCY SITUATIONS:\n\n🔴 CODE YELLOW (Room 305A):\n• Patient: Emma Brown\n• Alert: Blood sugar critically low\n• Time: 15 minutes ago\n• Status: Response team en route\n\n🟡 FALL RISK ALERT (Room 307B):\n• Patient: Frank Miller\n• Alert: High fall risk patient unattended\n• Time: 8 minutes ago\n• Status: Monitoring required\n\n📊 ALERT SUMMARY:\n• Total active alerts: 2\n• Average response time: 3.2 minutes\n• Resolved today: 4 alerts',
+						'🚨 CURRENT EMERGENCY SITUATIONS:\n\n🔴 CODE YELLOW (Room 305A):\n• Patient: Geeta Singh\n• Alert: Blood sugar critically low\n• Time: 15 minutes ago\n• Status: Response team en route\n\n🟡 FALL RISK ALERT (Room 307B):\n• Patient: Ashok Yadav\n• Alert: High fall risk patient unattended\n• Time: 8 minutes ago\n• Status: Monitoring required\n\n📊 ALERT SUMMARY:\n• Total active alerts: 2\n• Average response time: 3.2 minutes\n• Resolved today: 4 alerts',
 						[
-							{ text: 'Respond to Code Yellow', onPress: () => Alert.alert('Code Yellow Response', '🚨 RESPONDING TO MEDICAL EMERGENCY\n\nPatient: Emma Brown (Room 305A)\nCondition: Hypoglycemia\n\n✅ ACTIONS TAKEN:\n• Nurse dispatched immediately\n• Blood glucose kit prepared\n• Physician notified\n• IV dextrose ready\n\n⏱️ Response Time: 2 minutes\nStatus: Emergency team on scene') },
-							{ text: 'Address Fall Risk', onPress: () => Alert.alert('Fall Risk Management', '⚠️ FALL RISK INTERVENTION\n\nPatient: Frank Miller (Room 307B)\n\n✅ IMMEDIATE ACTIONS:\n• Bed alarm activated\n• Call bell within reach\n• Side rails raised\n• Non-slip socks provided\n• Frequent check schedule: Every 30 min\n\nFamily notified of safety measures.') },
+							{ text: 'Respond to Code Yellow', onPress: () => Alert.alert('Code Yellow Response', '🚨 RESPONDING TO MEDICAL EMERGENCY\n\nPatient: Geeta Singh (Room 305A)\nCondition: Hypoglycemia\n\n✅ ACTIONS TAKEN:\n• Nurse dispatched immediately\n• Blood glucose kit prepared\n• Physician notified\n• IV dextrose ready\n\n⏱️ Response Time: 2 minutes\nStatus: Emergency team on scene') },
+							{ text: 'Address Fall Risk', onPress: () => Alert.alert('Fall Risk Management', '⚠️ FALL RISK INTERVENTION\n\nPatient: Ashok Yadav (Room 307B)\n\n✅ IMMEDIATE ACTIONS:\n• Bed alarm activated\n• Call bell within reach\n• Side rails raised\n• Non-slip socks provided\n• Frequent check schedule: Every 30 min\n\nFamily notified of safety measures.') },
 							{ text: 'View Alert History', onPress: () => Alert.alert('Emergency Alert Log', 'Recent emergency alerts resolved:\n\n✅ 10:30 AM - Medication allergy (Room 309)\n✅ 11:45 AM - Vitals abnormal (Room 302)\n✅ 1:20 PM - Patient disorientation (Room 310)\n✅ 2:10 PM - Equipment malfunction (Room 304)\n\nAverage resolution time: 4.5 minutes') },
 							{ text: 'OK' }
 						]
@@ -182,9 +182,9 @@ const NurseDashboard = (props) => {
 								'Record Patient Vitals',
 								'Select patient and vital signs to record:',
 								[
-									{ text: 'Alice Johnson - Room 301A', onPress: () => Alert.alert('Vitals Entry', 'Patient: Alice Johnson\nRoom: 301A\n\nEnter vital signs:\n• Blood Pressure: ___/___\n• Temperature: ___°F\n• Pulse: ___ BPM\n• Oxygen Saturation: ___%\n• Respiratory Rate: ___\n\n[Save] [Cancel]') },
-									{ text: 'Bob Smith - Room 302B', onPress: () => Alert.alert('Vitals Entry', 'Patient: Bob Smith\nRoom: 302B\n\nEnter vital signs:\n• Blood Pressure: ___/___\n• Temperature: ___°F\n• Pulse: ___ BPM\n• Oxygen Saturation: ___%\n• Respiratory Rate: ___\n\n[Save] [Cancel]') },
-									{ text: 'Carol Davis - Room 303A', onPress: () => Alert.alert('Vitals Entry', 'Patient: Carol Davis\nRoom: 303A\n\nEnter vital signs:\n• Blood Pressure: ___/___\n• Temperature: ___°F\n• Pulse: ___ BPM\n• Oxygen Saturation: ___%\n• Respiratory Rate: ___\n\n[Save] [Cancel]') },
+									{ text: 'Sunita Devi - Room 301A', onPress: () => Alert.alert('Vitals Entry', 'Patient: Sunita Devi\nRoom: 301A\n\nEnter vital signs:\n• Blood Pressure: ___/___\n• Temperature: ___°F\n• Pulse: ___ BPM\n• Oxygen Saturation: ___%\n• Respiratory Rate: ___\n\n[Save] [Cancel]') },
+									{ text: 'Ramesh Gupta - Room 302B', onPress: () => Alert.alert('Vitals Entry', 'Patient: Ramesh Gupta\nRoom: 302B\n\nEnter vital signs:\n• Blood Pressure: ___/___\n• Temperature: ___°F\n• Pulse: ___ BPM\n• Oxygen Saturation: ___%\n• Respiratory Rate: ___\n\n[Save] [Cancel]') },
+									{ text: 'Kavita Sharma - Room 303A', onPress: () => Alert.alert('Vitals Entry', 'Patient: Kavita Sharma\nRoom: 303A\n\nEnter vital signs:\n• Blood Pressure: ___/___\n• Temperature: ___°F\n• Pulse: ___ BPM\n• Oxygen Saturation: ___%\n• Respiratory Rate: ___\n\n[Save] [Cancel]') },
 									{ text: 'View Overdue Vitals', onPress: () => Alert.alert('Overdue Vitals', 'Patients requiring vital signs check:\n\n🔴 OVERDUE (>6 hours):\n• Room 304B - Last: 8 hours ago\n• Room 306A - Last: 10 hours ago\n\n🟡 DUE SOON:\n• Room 301A - Due in 30 min\n• Room 302B - Due in 1 hour') },
 									{ text: 'Cancel', style: 'cancel' }
 								]

@@ -26,9 +26,9 @@ const PrescriptionProcessing = (props) => {
 	const [prescriptions, setPrescriptions] = useState([
 		{
 			id: 'RX001',
-			patientName: 'Sarah Johnson',
+			patientName: 'Priya Sharma',
 			patientId: 'P12345',
-			doctorName: 'Dr. Smith',
+			doctorName: 'Dr. Sharma',
 			department: 'Cardiology',
 			prescribedDate: '2024-01-15',
 			status: 'Pending',
@@ -45,9 +45,9 @@ const PrescriptionProcessing = (props) => {
 		},
 		{
 			id: 'RX002',
-			patientName: 'Mike Davis',
+			patientName: 'Amit Singh',
 			patientId: 'P12346',
-			doctorName: 'Dr. Williams',
+			doctorName: 'Dr. Verma',
 			department: 'Diabetes',
 			prescribedDate: '2024-01-15',
 			status: 'Processing',
@@ -63,9 +63,9 @@ const PrescriptionProcessing = (props) => {
 		},
 		{
 			id: 'RX003',
-			patientName: 'Emily Brown',
+			patientName: 'Sunita Devi',
 			patientId: 'P12347',
-			doctorName: 'Dr. Johnson',
+			doctorName: 'Dr. Gupta',
 			department: 'General Medicine',
 			prescribedDate: '2024-01-14',
 			status: 'Ready',
@@ -81,9 +81,9 @@ const PrescriptionProcessing = (props) => {
 		},
 		{
 			id: 'RX004',
-			patientName: 'Alex Wilson',
+			patientName: 'Ravi Kumar',
 			patientId: 'P12348',
-			doctorName: 'Dr. Martinez',
+			doctorName: 'Dr. Singh',
 			department: 'Orthopedics',
 			prescribedDate: '2024-01-14',
 			status: 'Dispensed',

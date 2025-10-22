@@ -23,13 +23,13 @@ const ReceptionDashboard = (props) => {
 		registrations: 8,
 		waitingPatients: 15,
 		appointmentQueue: [
-			{ id: '1', patient: 'Sarah Johnson', doctor: 'Dr. Smith', time: '10:30 AM', status: 'Waiting', type: 'Consultation' },
-			{ id: '2', patient: 'Mike Davis', doctor: 'Dr. Williams', time: '10:45 AM', status: 'In Progress', type: 'Follow-up' },
-			{ id: '3', patient: 'Emily Brown', doctor: 'Dr. Johnson', time: '11:00 AM', status: 'Scheduled', type: 'Check-up' },
+			{ id: '1', patient: 'Sanya Gupta', doctor: 'Dr. Sharma', time: '10:30 AM', status: 'Waiting', type: 'Consultation' },
+			{ id: '2', patient: 'Mukesh Jain', doctor: 'Dr. Agarwal', time: '10:45 AM', status: 'In Progress', type: 'Follow-up' },
+			{ id: '3', patient: 'Ekta Singh', doctor: 'Dr. Verma', time: '11:00 AM', status: 'Scheduled', type: 'Check-up' },
 		],
 		recentRegistrations: [
-			{ id: '1', name: 'Alex Wilson', phone: '+91 98765 43210', time: '9:30 AM', type: 'New Patient' },
-			{ id: '2', name: 'Lisa Smith', phone: '+91 87654 32109', time: '9:15 AM', type: 'Emergency' },
+			{ id: '1', name: 'Amit Yadav', phone: '+91 98765 43210', time: '9:30 AM', type: 'New Patient' },
+			{ id: '2', name: 'Lakshmi Patel', phone: '+91 87654 32109', time: '9:15 AM', type: 'Emergency' },
 		],
 		departmentStatus: [
 			{ id: '1', name: 'Cardiology', waitTime: '15 min', patients: 8, status: 'Normal' },

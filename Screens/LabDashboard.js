@@ -24,9 +24,9 @@ const LabDashboard = (props) => {
 		resultsReady: 12,
 		urgentTests: 6,
 		testQueue: [
-			{ id: '1', patient: 'Rajesh Kumar', testType: 'Complete Blood Count', status: 'Sample Collected', priority: 'Urgent', doctor: 'Dr. Johnson' },
-			{ id: '2', patient: 'Priya Sharma', testType: 'Lipid Profile', status: 'Processing', priority: 'Normal', doctor: 'Dr. Williams' },
-			{ id: '3', patient: 'Sanjay Patel', testType: 'Thyroid Function', status: 'Pending Collection', priority: 'Normal', doctor: 'Dr. Brown' },
+			{ id: '1', patient: 'Rajesh Kumar', testType: 'Complete Blood Count', status: 'Sample Collected', priority: 'Urgent', doctor: 'Dr. Sharma' },
+			{ id: '2', patient: 'Priya Sharma', testType: 'Lipid Profile', status: 'Processing', priority: 'Normal', doctor: 'Dr. Verma' },
+			{ id: '3', patient: 'Sanjay Patel', testType: 'Thyroid Function', status: 'Pending Collection', priority: 'Normal', doctor: 'Dr. Gupta' },
 		],
 		recentResults: [
 			{ id: '1', patient: 'Neha Gupta', test: 'Blood Sugar', result: '95 mg/dL', status: 'Normal', time: '2 hours ago' },
@@ -131,9 +131,9 @@ const LabDashboard = (props) => {
 					{renderStatCard('Results Ready', dashboardData.resultsReady, 'assignment-turned-in', '#06b6d4', () => props.navigation.navigate('LabResults'))}
 					{renderStatCard('Urgent Tests', dashboardData.urgentTests, 'priority-high', '#dc2626', () => Alert.alert(
 						'Urgent Tests - Priority Queue',
-						'STAT orders requiring immediate attention:\n\n🔴 CRITICAL:\n• Patient: John Doe - Room 301\n• Test: Cardiac Enzymes\n• Ordered: 45 min ago\n• Status: Sample received\n\n🟠 HIGH:\n• Patient: Mary Smith - ER\n• Test: Blood Gas Analysis\n• Ordered: 20 min ago\n• Status: In progress\n\n⚡ All urgent tests < 1 hour turnaround',
+						'STAT orders requiring immediate attention:\n\n🔴 CRITICAL:\n• Patient: Rajesh Kumar - Room 301\n• Test: Cardiac Enzymes\n• Ordered: 45 min ago\n• Status: Sample received\n\n🟠 HIGH:\n• Patient: Priya Sharma - ER\n• Test: Blood Gas Analysis\n• Ordered: 20 min ago\n• Status: In progress\n\n⚡ All urgent tests < 1 hour turnaround',
 						[
-							{ text: 'Process Next Urgent', onPress: () => Alert.alert('Processing', 'Starting next urgent test:\nPatient: John Doe\nTest: Cardiac Enzymes\nEstimated completion: 15 minutes') },
+							{ text: 'Process Next Urgent', onPress: () => Alert.alert('Processing', 'Starting next urgent test:\nPatient: Rajesh Kumar\nTest: Cardiac Enzymes\nEstimated completion: 15 minutes') },
 							{ text: 'View Full Queue', onPress: () => Alert.alert('Urgent Queue', 'Total urgent tests: 6\n\n1. Cardiac Enzymes - 45 min\n2. Blood Gas - 20 min\n3. Troponin - 30 min\n4. CBC STAT - 15 min\n5. Glucose - 10 min\n6. Electrolytes - 5 min') },
 							{ text: 'OK' }
 						]

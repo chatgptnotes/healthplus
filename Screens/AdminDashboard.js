@@ -43,9 +43,9 @@ const AdminDashboard = (props) => {
 			{ id: '4', name: 'Emergency', revenue: 280000, patients: 112, staff: 12 },
 		],
 		recentActivities: [
-			{ id: '1', user: 'Dr. Smith', action: 'Updated patient record', time: '10 min ago' },
-			{ id: '2', user: 'Nurse Johnson', action: 'Recorded vital signs', time: '15 min ago' },
-			{ id: '3', user: 'Admin Wilson', action: 'Created new user account', time: '30 min ago' },
+			{ id: '1', user: 'Dr. Sharma', action: 'Updated patient record', time: '10 min ago' },
+			{ id: '2', user: 'Nurse Priya', action: 'Recorded vital signs', time: '15 min ago' },
+			{ id: '3', user: 'Admin Singh', action: 'Created new user account', time: '30 min ago' },
 		]
 	});
 
@@ -402,6 +402,51 @@ const AdminDashboard = (props) => {
 						>
 							<MaterialCommunityIcons name="file-document-multiple" size={30} color="#0ea5e9" />
 							<Text style={styles.actionText}>SOPs</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.actionButton}
+							onPress={() => {
+								try {
+									console.log('Navigating to DailyAccountingSOP...');
+									props.navigation.navigate('DailyAccountingSOP');
+								} catch (error) {
+									console.error('Navigation error:', error);
+									alert('Navigation error: ' + error.message);
+								}
+							}}
+						>
+							<MaterialCommunityIcons name="calculator" size={30} color="#10b981" />
+							<Text style={styles.actionText}>Daily Accounting</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.actionButton}
+							onPress={() => {
+								try {
+									console.log('Navigating to PatientWiseReconciliation...');
+									props.navigation.navigate('PatientWiseReconciliation');
+								} catch (error) {
+									console.error('Navigation error:', error);
+									alert('Navigation error: ' + error.message);
+								}
+							}}
+						>
+							<MaterialCommunityIcons name="file-search" size={30} color="#f59e0b" />
+							<Text style={styles.actionText}>Reconciliation</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.actionButton}
+							onPress={() => {
+								try {
+									console.log('Navigating to StaffTrainingModule...');
+									props.navigation.navigate('StaffTrainingModule');
+								} catch (error) {
+									console.error('Navigation error:', error);
+									alert('Navigation error: ' + error.message);
+								}
+							}}
+						>
+							<MaterialCommunityIcons name="school" size={30} color="#8b5cf6" />
+							<Text style={styles.actionText}>Staff Training</Text>
 						</TouchableOpacity>
 					</View>
 				</View>

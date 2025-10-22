@@ -17,11 +17,11 @@ const { width, height } = Dimensions.get('window');
 
 const DigitalConsent = (props) => {
 	const [consentData, setConsentData] = useState({
-		patientName: 'John Doe',
+		patientName: 'Rajesh Kumar',
 		patientId: 'PT2024001',
 		dateOfBirth: '1985-03-15',
 		procedure: 'Cardiac Catheterization',
-		doctor: 'Dr. Sarah Wilson',
+		doctor: 'Dr. Priya Sharma',
 		department: 'Cardiology',
 		scheduledDate: '2024-10-25',
 		emergencyContact: '+1 555-0123',

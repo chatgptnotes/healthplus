@@ -15,6 +15,8 @@ import PharmacyReducer from './store/reducers/PharmacyReducer';
 import LabReducer from './store/reducers/LabReducer';
 import BillingReducer from './store/reducers/BillingReducer';
 import NursingReducer from './store/reducers/NursingReducer';
+import HospitalMetricsReducer from './store/reducers/HospitalMetricsReducer';
+import NotificationReducer from './store/reducers/NotificationReducer';
 
 // Import your screens
 import ProfileScreen from './Screens/chooseProfileScreen';
@@ -67,6 +69,16 @@ import QualityDashboard from './Screens/QualityDashboard';
 import NABHAccreditation from './Screens/NABHAccreditation';
 import SOPManagement from './Screens/SOPManagement';
 
+// Import Occupancy Dashboard and Notification System
+import OccupancyDashboard from './Screens/OccupancyDashboard';
+import StaffTodoManager from './Screens/StaffTodoManager';
+import NotificationCenter from './Screens/NotificationCenter';
+
+// Import SOP-based modules
+import DailyAccountingSOP from './Screens/DailyAccountingSOP';
+import PatientWiseReconciliation from './Screens/PatientWiseReconciliation';
+import StaffTrainingModule from './Screens/StaffTrainingModule';
+
 const store = configureStore({
   reducer: {
     appointment: AppointmentReducer,
@@ -76,6 +88,8 @@ const store = configureStore({
     lab: LabReducer,
     billing: BillingReducer,
     nursing: NursingReducer,
+    hospitalMetrics: HospitalMetricsReducer,
+    notifications: NotificationReducer,
   },
 });
 
@@ -356,6 +370,38 @@ function HomeStack() {
         name="SOPManagement"
         component={SOPManagement}
         options={{ title: 'SOPs & Training' }}
+      />
+      <Stack.Screen
+        name="OccupancyDashboard"
+        component={OccupancyDashboard}
+        options={{ title: 'Hospital Occupancy & KPIs' }}
+      />
+      <Stack.Screen
+        name="StaffTodoManager"
+        component={StaffTodoManager}
+        options={{ title: 'My Tasks' }}
+      />
+      <Stack.Screen
+        name="NotificationCenter"
+        component={NotificationCenter}
+        options={{ title: 'Notifications' }}
+      />
+
+      {/* SOP-based Module Screens */}
+      <Stack.Screen
+        name="DailyAccountingSOP"
+        component={DailyAccountingSOP}
+        options={{ title: 'Daily Accounting SOP' }}
+      />
+      <Stack.Screen
+        name="PatientWiseReconciliation"
+        component={PatientWiseReconciliation}
+        options={{ title: 'Patient-wise Reconciliation' }}
+      />
+      <Stack.Screen
+        name="StaffTrainingModule"
+        component={StaffTrainingModule}
+        options={{ title: 'Staff Training & Development' }}
       />
     </Stack.Navigator>
   );

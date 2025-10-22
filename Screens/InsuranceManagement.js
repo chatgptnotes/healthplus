@@ -24,7 +24,7 @@ const InsuranceManagement = (props) => {
 	const [claims, setClaims] = useState([
 		{
 			id: 'CLM001',
-			patientName: 'John Doe',
+			patientName: 'Rajesh Kumar',
 			policyNumber: 'CGHS123456789',
 			insuranceType: 'CGHS',
 			claimAmount: 15000,
@@ -38,7 +38,7 @@ const InsuranceManagement = (props) => {
 		},
 		{
 			id: 'CLM002',
-			patientName: 'Sarah Johnson',
+			patientName: 'Priya Sharma',
 			policyNumber: 'ECHS987654321',
 			insuranceType: 'ECHS',
 			claimAmount: 25000,
@@ -52,7 +52,7 @@ const InsuranceManagement = (props) => {
 		},
 		{
 			id: 'CLM003',
-			patientName: 'Michael Brown',
+			patientName: 'Amit Singh',
 			policyNumber: 'RLY456789123',
 			insuranceType: 'Railways',
 			claimAmount: 8500,
@@ -70,7 +70,7 @@ const InsuranceManagement = (props) => {
 	const [cashlessRequests, setCashlessRequests] = useState([
 		{
 			id: 'CSH001',
-			patientName: 'Alice Wilson',
+			patientName: 'Sunita Devi',
 			policyNumber: 'TPA789123456',
 			insuranceType: 'TPA Health',
 			estimatedAmount: 50000,
@@ -84,7 +84,7 @@ const InsuranceManagement = (props) => {
 		},
 		{
 			id: 'CSH002',
-			patientName: 'David Lee',
+			patientName: 'Sanjay Patel',
 			policyNumber: 'STR654321987',
 			insuranceType: 'Star Health',
 			estimatedAmount: 30000,

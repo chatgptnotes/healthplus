@@ -32,7 +32,7 @@ const RadiologyImageViewer = (props) => {
 	// Sample study data - this would come from navigation params or Redux
 	const [studyData, setStudyData] = useState({
 		id: 'RAD001',
-		patientName: 'Sarah Johnson',
+		patientName: 'Priya Sharma',
 		patientId: 'P12345',
 		studyType: 'Chest X-Ray',
 		studyDate: '2024-01-15',

@@ -26,7 +26,7 @@ const LabResults = (props) => {
 	const [testResults, setTestResults] = useState([
 		{
 			id: 'LAB001',
-			patientName: 'Sarah Johnson',
+			patientName: 'Sita Sharma',
 			patientId: 'P12345',
 			testName: 'Complete Blood Count (CBC)',
 			testDate: '2024-01-15',
@@ -45,7 +45,7 @@ const LabResults = (props) => {
 		},
 		{
 			id: 'LAB002',
-			patientName: 'Mike Davis',
+			patientName: 'Vikash Patel',
 			patientId: 'P12346',
 			testName: 'HbA1c',
 			testDate: '2024-01-15',
@@ -61,7 +61,7 @@ const LabResults = (props) => {
 		},
 		{
 			id: 'LAB003',
-			patientName: 'Emily Brown',
+			patientName: 'Meera Singh',
 			patientId: 'P12347',
 			testName: 'Thyroid Function Test',
 			testDate: '2024-01-14',
@@ -79,7 +79,7 @@ const LabResults = (props) => {
 		},
 		{
 			id: 'LAB004',
-			patientName: 'Alex Wilson',
+			patientName: 'Arjun Kumar',
 			patientId: 'P12348',
 			testName: 'Kidney Function Test',
 			testDate: '2024-01-14',
@@ -97,7 +97,7 @@ const LabResults = (props) => {
 		},
 		{
 			id: 'LAB005',
-			patientName: 'Lisa Martinez',
+			patientName: 'Priya Reddy',
 			patientId: 'P12349',
 			testName: 'Lipid Profile',
 			testDate: '2024-01-13',
