@@ -77,12 +77,16 @@ const HopeHospitalSplash = ({ onFinish }) => {
           },
         ]}
       >
-        {/* Actual Hope Hospital Logo */}
-        <Image
-          source={require('../assets/hope-hospital-logo.png')}
-          style={styles.logoImage}
-          resizeMode="contain"
-        />
+        {/* Hope Hospital Logo with fallback */}
+        <View style={styles.logoWrapper}>
+          <Image
+            source={require('../assets/hope-hospital-logo.png')}
+            style={styles.logoImage}
+            resizeMode="contain"
+            onError={(error) => console.log('Logo load error:', error)}
+            onLoad={() => console.log('Logo loaded successfully')}
+          />
+        </View>
       </Animated.View>
 
       <Animated.View
@@ -124,9 +128,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
   },
-  logoImage: {
+  logoWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
     width: width * 0.8,
     height: height * 0.4,
+    maxWidth: 400,
+    maxHeight: 300,
+  },
+  logoImage: {
+    width: '100%',
+    height: '100%',
     maxWidth: 400,
     maxHeight: 300,
   },

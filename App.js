@@ -12,6 +12,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Import custom splash screen component
 import HopeHospitalSplash from './Components/HopeHospitalSplash';
+import SimpleSplash from './Components/SimpleSplash';
 
 import AppointmentReducer from './store/reducers/appointmentReducer';
 import AuthReducer from './store/reducers/AuthReducer';
@@ -512,7 +513,7 @@ export default function App() {
   if (!isAppReady || showCustomSplash) {
     return (
       <SafeAreaProvider>
-        <HopeHospitalSplash onFinish={isAppReady ? onCustomSplashFinish : null} />
+        <SimpleSplash onFinish={isAppReady ? onCustomSplashFinish : null} />
       </SafeAreaProvider>
     );
   }
