@@ -22,33 +22,34 @@ const DailyAccountingSOP = (props) => {
 		{
 			id: '1',
 			title: 'Payment Protocol',
-			description: 'Verify all payment methods and transactions',
+			description: 'No cash payments - UPI/Bank Transfer/Cheque only',
 			status: 'pending',
-			priority: 'high',
+			priority: 'critical',
 			deadline: '10:00 AM',
 			responsible: 'Account Team',
 			completed: false,
 			subtasks: [
-				'Verify cash payments',
-				'Check card transaction receipts',
-				'Confirm digital payment entries',
-				'Update payment ledger'
+				'No payments should be made in cash',
+				'All transactions via UPI, bank transfer or cheque',
+				'Maintain cashbook and daybook entries daily',
+				'Track petty cash transactions'
 			]
 		},
 		{
 			id: '2',
 			title: 'Approval System for Payments',
-			description: 'Ensure all payments have proper authorization',
+			description: 'Three-tier approval: Gaurav + Accountant + Receiver',
 			status: 'pending',
-			priority: 'high',
+			priority: 'critical',
 			deadline: '11:00 AM',
-			responsible: 'Finance Head',
+			responsible: 'Gaurav Agrawal',
 			completed: false,
 			subtasks: [
-				'Review pending payment approvals',
-				'Verify authorization signatures',
-				'Update approval status',
-				'Send notifications to stakeholders'
+				'Gaurav Agrawal approval required',
+				'Accountant who is paying approval',
+				'Receiving person confirmation',
+				'Document voucher approval trail digitally',
+				'Send all vouchers in 1 PDF by mail'
 			]
 		},
 		{

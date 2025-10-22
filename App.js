@@ -78,6 +78,12 @@ import NotificationCenter from './Screens/NotificationCenter';
 import DailyAccountingSOP from './Screens/DailyAccountingSOP';
 import PatientWiseReconciliation from './Screens/PatientWiseReconciliation';
 import StaffTrainingModule from './Screens/StaffTrainingModule';
+import EmergencyContactsDirectory from './Screens/EmergencyContactsDirectory';
+import SecurityStaffManagement from './Screens/SecurityStaffManagement';
+import JustDialLeadManagement from './Screens/JustDialLeadManagement';
+import OTTechnicianModule from './Screens/OTTechnicianModule';
+import LeadershipActionPoints from './Screens/LeadershipActionPoints';
+import MorningHuddleEnhanced from './Screens/MorningHuddleEnhanced';
 
 const store = configureStore({
   reducer: {
@@ -402,6 +408,36 @@ function HomeStack() {
         name="StaffTrainingModule"
         component={StaffTrainingModule}
         options={{ title: 'Staff Training & Development' }}
+      />
+      <Stack.Screen
+        name="EmergencyContactsDirectory"
+        component={EmergencyContactsDirectory}
+        options={{ title: 'Emergency Contacts & Intercom' }}
+      />
+      <Stack.Screen
+        name="SecurityStaffManagement"
+        component={SecurityStaffManagement}
+        options={{ title: 'Security Staff Management' }}
+      />
+      <Stack.Screen
+        name="JustDialLeadManagement"
+        component={JustDialLeadManagement}
+        options={{ title: 'JustDial Lead Management' }}
+      />
+      <Stack.Screen
+        name="OTTechnicianModule"
+        component={OTTechnicianModule}
+        options={{ title: 'OT Technician Management' }}
+      />
+      <Stack.Screen
+        name="LeadershipActionPoints"
+        component={LeadershipActionPoints}
+        options={{ title: 'Leadership Action Points' }}
+      />
+      <Stack.Screen
+        name="MorningHuddleEnhanced"
+        component={MorningHuddleEnhanced}
+        options={{ title: 'Enhanced Morning Huddle' }}
       />
     </Stack.Navigator>
   );
