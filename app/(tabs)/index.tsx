@@ -21,24 +21,21 @@ import {useDispatch, useSelector} from 'react-redux';
 import { router } from 'expo-router';
 
 import { MaterialCommunityIcons, FontAwesome5, FontAwesome } from "@expo/vector-icons";
+import TestSupabase from '../../Components/TestSupabase';
 
 
 const HomeScreen = (props) => {
 	const Appointments = useSelector(state => state.appointment.appointments);
-	
-	const PatientName = useSelector(state => state.patient.patients.name);
-	
-	console.log("PATIENT NAME");
-	// console.log(PatientName);
+	const PatientName = useSelector(state => state.patient.patients?.name);
+	const userRole = useSelector(state => state.auth.role);
+	const userEmail = useSelector(state => state.auth.email);
+
+	console.log("USER ROLE:", userRole);
+
 	const dispatch = useDispatch();
 	const [error , setError] = useState();
 	const [isLoading, setIsLoading] = useState(false);
-	
-	// const userId = useSelector(state => state.auth.userId);
-	// const data = useSelector(state => state.patient.find(id => patient.id == userId))
-	// console.log("Patient Name")
-	// console.log(Appointments);
-	// console.log(userId)
+
 	const stateSnap = useSelector(state => state)
 	console.log("THIS IS THE STATE SNAP");
 	console.log(stateSnap)
@@ -47,19 +44,21 @@ const HomeScreen = (props) => {
 	
 	// console.log(isLoading);
 	const getPatients = useCallback(async()=>{
-		setIsLoading(true)
-		try{
-			const patientData = await dispatch(PatientActions.fetchPatient());
-		}catch (err) {
-			setError(erro.message)
+		// Only fetch patient data for patient users
+		if (userRole === 'patient') {
+			setIsLoading(true)
+			try{
+				const patientData = await dispatch(PatientActions.fetchPatient());
+			}catch (err) {
+				setError(err.message)
+			}
+			setIsLoading(false)
 		}
-		setIsLoading(false)
-	},[isLoading, dispatch])
+	},[userRole, isLoading, dispatch])
 
 	const getData = useCallback(async()=>{
 		setIsLoading(true)
 		try{
-			
 			const currentAppointments = await dispatch(AppointmentActions.FetchAppointments());
 			// console.log("currentAppointments");
 			// console.log(currentAppointments)
@@ -70,10 +69,11 @@ const HomeScreen = (props) => {
 	}, [isLoading, dispatch]);
 
 	useEffect(()=>{
-		getPatients();
-		getData();
-		
-	}, [dispatch]);
+		if (userRole) {
+			getPatients();
+			getData();
+		}
+	}, [dispatch, userRole]);
 	
 	const renderCard = (itemData) => {
 		return (
@@ -97,15 +97,32 @@ const HomeScreen = (props) => {
 				);
 		}
 
+	// Add a test mode toggle (remove this in production)
+	const [showTest, setShowTest] = useState(false);
+
+	if (showTest) {
+		return <TestSupabase />;
+	}
+
 	return (
 		<View style={styles.screen}>
 			<View style={styles.screenTop}>
 				<View style={styles.GreetingsContainer}>
-					<Text style={styles.Titletext}>Hello, {PatientName} </Text>
-					<Text style={styles.Titletext}></Text>
+					<Text style={styles.Titletext}>
+						Hello, {userRole === 'doctor' ? 'Dr. ' : ''}{PatientName || userEmail?.split('@')[0]}
+					</Text>
+					<Text style={styles.text}>
+						{userRole === 'doctor' ? 'Doctor Dashboard' : 'Patient Dashboard'}
+					</Text>
+					<TouchableOpacity
+						onPress={() => setShowTest(!showTest)}
+						style={{padding: 10, backgroundColor: 'yellow', marginTop: 10, borderRadius: 5}}
+					>
+						<Text>Toggle Test Mode</Text>
+					</TouchableOpacity>
 				</View>
 
-		
+
 			</View>
 					<View style={styles.ButtonsContainer}>
 					<TouchableOpacity

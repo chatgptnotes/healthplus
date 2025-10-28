@@ -1,69 +1,156 @@
+import { supabase } from '../../lib/supabase';
+
 export const LOGIN = "LOGIN";
 export const SIGNUP = "SIGNUP";
-export const LOGOUT = "LOGOUT"
+export const LOGOUT = "LOGOUT";
+export const SET_AUTH_ERROR = "SET_AUTH_ERROR";
+export const SET_LOADING = "SET_LOADING";
 
-export const SignUp = (email, password) =>{
+export const SignUp = (email, password, userData = {}) => {
 	return async (dispatch) => {
-		const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAnTqtwvF8cWN4AFA88HwoHn0MGo6taDeQ',{
-			method: 'POST',
-			headers:{'Content-Type': 'application/json'},
-			body:JSON.stringify({
-				email:email,
-				password:password,
-				returnSecureToken:true,
-			})
+		dispatch({ type: SET_LOADING, payload: true });
+		try {
+			const { data: authData, error: authError } = await supabase.auth.signUp({
+				email,
+				password,
+			});
 
-		});
-		if(!response.ok){
-			// throw new Error('Some went wrong');
-			const ErrorResData = await response.json();
+			if (authError) throw authError;
+
+			if (authData.user) {
+				const { error: profileError } = await supabase
+					.from('User')
+					.insert([
+						{
+							id: authData.user.id,
+							email: authData.user.email,
+							name: userData.name || '',
+							role: userData.role || 'patient',
+							created_at: new Date().toISOString(),
+						},
+					]);
+
+				if (profileError) throw profileError;
+
+				dispatch({
+					type: SIGNUP,
+					token: authData.session?.access_token,
+					userId: authData.user.id,
+					email: authData.user.email,
+					role: userData.role || 'patient'
+				});
+			}
+		} catch (error) {
 			let message = 'Something went wrong';
-			if(ErrorResData.error.message ==='EMAIL_EXISTS'){
+			if (error.message?.includes('already registered')) {
 				message = 'Email already exists';
-			}else if(ErrorResData.error.message ==='OPERATION_NOT_ALLOWED'){
-				message = 'Operation is not allowed';
-			}else if(ErrorResData.error.message ==='TOO_MANY_ATTEMPTS_TRY_LATER'){
-				message = 'Too many attempts';
+			} else if (error.message) {
+				message = error.message;
 			}
+			dispatch({ type: SET_AUTH_ERROR, payload: message });
 			throw new Error(message);
+		} finally {
+			dispatch({ type: SET_LOADING, payload: false });
 		}
-		const resData = await response.json();
-		dispatch({type:SIGNUP});
 	};
 };
 
-export const Login = (email, password) =>{
+export const Login = (email, password, userRole = 'patient') => {
+	return async (dispatch) => {
+		dispatch({ type: SET_LOADING, payload: true });
+		try {
+			const { data, error } = await supabase.auth.signInWithPassword({
+				email,
+				password,
+			});
 
-	return async (dispatch) =>{
-		const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAnTqtwvF8cWN4AFA88HwoHn0MGo6taDeQ',
-		{
-			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
-			body: JSON.stringify({
-				email:email,
-				password:password,
-				returnSecureToken:true
-			})
-		});
+			if (error) throw error;
 
-		if(!response.ok){
-			const ErrorResData = await response.json();
+			// First check if user profile exists
+			let { data: userData, error: userError } = await supabase
+				.from('User')
+				.select('*')
+				.eq('id', data.user.id)
+				.single();
+
+			// If user profile doesn't exist, create one
+			if (userError && userError.code === 'PGRST116') {
+				const { data: newUserData, error: createError } = await supabase
+					.from('User')
+					.insert([{
+						id: data.user.id,
+						email: data.user.email,
+						role: userRole,
+						created_at: new Date().toISOString()
+					}])
+					.select()
+					.single();
+
+				if (createError) {
+					console.error('Error creating user profile:', createError);
+				} else {
+					userData = newUserData;
+				}
+			}
+
+			dispatch({
+				type: LOGIN,
+				token: data.session.access_token,
+				userId: data.user.id,
+				email: data.user.email,
+				role: userData?.role || userRole
+			});
+		} catch (error) {
 			let message = 'Something went wrong';
-			if(ErrorResData.error.message === 'EMAIL_NOT_FOUND'){
-				message = 'Email not found';
-			}else if(ErrorResData.error.message === 'INVALID_PASSWORD'){
-				message = 'Invalid Password';
-			}else if(ErrorResData.error.message === 'USER_DISABLED'){
-				message = 'User is disabled';
+			if (error.message?.includes('Invalid login')) {
+				message = 'Invalid email or password';
+			} else if (error.message) {
+				message = error.message;
 			}
+			dispatch({ type: SET_AUTH_ERROR, payload: message });
 			throw new Error(message);
+		} finally {
+			dispatch({ type: SET_LOADING, payload: false });
 		}
-		const resData = await response.json();
-		console.log(resData);
-		dispatch({ type:LOGIN, token:resData.idToken, userId:resData.localId, email:resData.email });
 	};
 };
 
-export const Logout = () =>{
-	return {type:LOGOUT};
+export const Logout = () => {
+	return async (dispatch) => {
+		try {
+			const { error } = await supabase.auth.signOut();
+			if (error) throw error;
+			dispatch({ type: LOGOUT });
+		} catch (error) {
+			console.error('Logout error:', error);
+			dispatch({ type: LOGOUT });
+		}
+	};
+};
+
+export const checkSession = () => {
+	return async (dispatch) => {
+		try {
+			const { data: { session } } = await supabase.auth.getSession();
+
+			if (session) {
+				// Fetch user role from User table
+				const { data: userData, error } = await supabase
+					.from('User')
+					.select('*')
+					.eq('id', session.user.id)
+					.single();
+
+				dispatch({
+					type: LOGIN,
+					token: session.access_token,
+					userId: session.user.id,
+					email: session.user.email,
+					role: userData?.role || 'patient'
+				});
+			}
+		} catch (error) {
+			console.error('Session check error:', error);
+		}
+	};
 };

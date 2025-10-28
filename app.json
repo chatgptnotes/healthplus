@@ -16,7 +16,11 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.hopehospital.management"
+      "bundleIdentifier": "com.hopehospital.management",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,5 +34,10 @@
       "output": "single",
       "favicon": "./assets/icon.png"
     },
+    "extra": {
+      "eas": {
+        "projectId": "237afee5-ffe5-4d45-ab39-344243f9a940"
+      }
+    }
   }
 }

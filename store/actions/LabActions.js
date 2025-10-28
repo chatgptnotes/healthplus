@@ -1,3 +1,5 @@
+import { supabase } from '../../lib/supabase';
+
 // Lab Action Types
 export const FETCH_TEST_ORDERS = "FETCH_TEST_ORDERS";
 export const CREATE_TEST_ORDER = "CREATE_TEST_ORDER";
@@ -14,31 +16,29 @@ export const UPDATE_SAMPLE_STATUS = "UPDATE_SAMPLE_STATUS";
 export const FetchTestOrders = () => {
 	return async (dispatch, getState) => {
 		try {
-			const response = await fetch(`https://healthplus-2b9b0.firebaseio.com/lab/testOrders.json`);
-			if (!response.ok) {
-				throw new Error("Failed to fetch test orders");
+			const { data, error } = await supabase
+				.from('lab_test_orders')
+				.select('*');
+
+			if (error) {
+				throw new Error(`Failed to fetch test orders: ${error.message}`);
 			}
 
-			const resData = await response.json();
-			const loadedTestOrders = [];
-
-			for (const key in resData) {
-				loadedTestOrders.push({
-					id: key,
-					patientId: resData[key].patientId,
-					patientName: resData[key].patientName,
-					doctorId: resData[key].doctorId,
-					doctorName: resData[key].doctorName,
-					tests: resData[key].tests,
-					status: resData[key].status || 'Pending',
-					orderDate: resData[key].orderDate,
-					sampleCollectedDate: resData[key].sampleCollectedDate,
-					resultsDate: resData[key].resultsDate,
-					priority: resData[key].priority || 'Normal',
-					department: resData[key].department,
-					totalAmount: resData[key].totalAmount
-				});
-			}
+			const loadedTestOrders = data.map(item => ({
+				id: item.id,
+				patientId: item.patient_id,
+				patientName: item.patient_name,
+				doctorId: item.doctor_id,
+				doctorName: item.doctor_name,
+				tests: item.tests,
+				status: item.status || 'Pending',
+				orderDate: item.order_date,
+				sampleCollectedDate: item.sample_collected_date,
+				resultsDate: item.results_date,
+				priority: item.priority || 'Normal',
+				department: item.department,
+				totalAmount: item.total_amount
+			}));
 
 			dispatch({
 				type: FETCH_TEST_ORDERS,
@@ -53,38 +53,47 @@ export const FetchTestOrders = () => {
 // Create Test Order
 export const CreateTestOrder = (orderData) => {
 	return async (dispatch, getState) => {
-		const token = getState().auth.token;
 		const userId = getState().auth.userId;
 
 		try {
-			const response = await fetch(
-				`https://healthplus-2b9b0.firebaseio.com/lab/testOrders.json?auth=${token}`,
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						...orderData,
-						orderDate: new Date().toISOString(),
-						status: 'Pending',
-						orderedBy: userId
-					})
-				}
-			);
+			const { data, error } = await supabase
+				.from('lab_test_orders')
+				.insert({
+					patient_id: orderData.patientId,
+					patient_name: orderData.patientName,
+					doctor_id: orderData.doctorId,
+					doctor_name: orderData.doctorName,
+					tests: orderData.tests,
+					department: orderData.department,
+					total_amount: orderData.totalAmount,
+					priority: orderData.priority || 'Normal',
+					order_date: new Date().toISOString(),
+					status: 'Pending',
+					ordered_by: userId,
+					created_at: new Date().toISOString()
+				})
+				.select()
+				.single();
 
-			if (!response.ok) {
-				throw new Error("Failed to create test order");
+			if (error) {
+				throw new Error(`Failed to create test order: ${error.message}`);
 			}
-
-			const resData = await response.json();
 
 			dispatch({
 				type: CREATE_TEST_ORDER,
 				testOrder: {
-					id: resData.name,
-					...orderData,
-					orderDate: new Date().toISOString(),
-					status: 'Pending',
-					orderedBy: userId
+					id: data.id,
+					patientId: data.patient_id,
+					patientName: data.patient_name,
+					doctorId: data.doctor_id,
+					doctorName: data.doctor_name,
+					tests: data.tests,
+					department: data.department,
+					totalAmount: data.total_amount,
+					priority: data.priority,
+					orderDate: data.order_date,
+					status: data.status,
+					orderedBy: data.ordered_by
 				}
 			});
 		} catch (err) {
@@ -96,28 +105,32 @@ export const CreateTestOrder = (orderData) => {
 // Update Test Status
 export const UpdateTestStatus = (testOrderId, newStatus, additionalData = {}) => {
 	return async (dispatch, getState) => {
-		const token = getState().auth.token;
 		const userId = getState().auth.userId;
 
 		try {
+			// Convert camelCase to snake_case for additional data
+			const convertedAdditionalData = {};
+			for (const [key, value] of Object.entries(additionalData)) {
+				const snakeKey = key.replace(/([A-Z])/g, '_$1').toLowerCase();
+				convertedAdditionalData[snakeKey] = value;
+			}
+
 			const updateData = {
 				status: newStatus,
-				lastUpdated: new Date().toISOString(),
-				updatedBy: userId,
-				...additionalData
+				updated_at: new Date().toISOString(),
+				updated_by: userId,
+				...convertedAdditionalData
 			};
 
-			const response = await fetch(
-				`https://healthplus-2b9b0.firebaseio.com/lab/testOrders/${testOrderId}.json?auth=${token}`,
-				{
-					method: "PATCH",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(updateData)
-				}
-			);
+			const { data, error } = await supabase
+				.from('lab_test_orders')
+				.update(updateData)
+				.eq('id', testOrderId)
+				.select()
+				.single();
 
-			if (!response.ok) {
-				throw new Error("Failed to update test status");
+			if (error) {
+				throw new Error(`Failed to update test status: ${error.message}`);
 			}
 
 			dispatch({
@@ -136,29 +149,27 @@ export const UpdateTestStatus = (testOrderId, newStatus, additionalData = {}) =>
 // Submit Test Results
 export const SubmitTestResults = (testOrderId, results, reportFile = null) => {
 	return async (dispatch, getState) => {
-		const token = getState().auth.token;
 		const userId = getState().auth.userId;
 
 		try {
 			const updateData = {
 				status: 'Completed',
 				results: results,
-				resultsDate: new Date().toISOString(),
-				completedBy: userId,
-				reportFile: reportFile
+				results_date: new Date().toISOString(),
+				completed_by: userId,
+				report_file: reportFile,
+				updated_at: new Date().toISOString()
 			};
 
-			const response = await fetch(
-				`https://healthplus-2b9b0.firebaseio.com/lab/testOrders/${testOrderId}.json?auth=${token}`,
-				{
-					method: "PATCH",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(updateData)
-				}
-			);
+			const { data, error } = await supabase
+				.from('lab_test_orders')
+				.update(updateData)
+				.eq('id', testOrderId)
+				.select()
+				.single();
 
-			if (!response.ok) {
-				throw new Error("Failed to submit test results");
+			if (error) {
+				throw new Error(`Failed to submit test results: ${error.message}`);
 			}
 
 			dispatch({
@@ -179,28 +190,26 @@ export const SubmitTestResults = (testOrderId, results, reportFile = null) => {
 export const FetchTestTemplates = () => {
 	return async (dispatch, getState) => {
 		try {
-			const response = await fetch(`https://healthplus-2b9b0.firebaseio.com/lab/testTemplates.json`);
-			if (!response.ok) {
-				throw new Error("Failed to fetch test templates");
+			const { data, error } = await supabase
+				.from('lab_test_templates')
+				.select('*');
+
+			if (error) {
+				throw new Error(`Failed to fetch test templates: ${error.message}`);
 			}
 
-			const resData = await response.json();
-			const loadedTemplates = [];
-
-			for (const key in resData) {
-				loadedTemplates.push({
-					id: key,
-					name: resData[key].name,
-					category: resData[key].category,
-					parameters: resData[key].parameters,
-					normalRanges: resData[key].normalRanges,
-					units: resData[key].units,
-					preparationInstructions: resData[key].preparationInstructions,
-					cost: resData[key].cost,
-					duration: resData[key].duration,
-					department: resData[key].department
-				});
-			}
+			const loadedTemplates = data.map(item => ({
+				id: item.id,
+				name: item.name,
+				category: item.category,
+				parameters: item.parameters,
+				normalRanges: item.normal_ranges,
+				units: item.units,
+				preparationInstructions: item.preparation_instructions,
+				cost: item.cost,
+				duration: item.duration,
+				department: item.department
+			}));
 
 			dispatch({
 				type: FETCH_TEST_TEMPLATES,
@@ -216,27 +225,25 @@ export const FetchTestTemplates = () => {
 export const FetchEquipmentStatus = () => {
 	return async (dispatch, getState) => {
 		try {
-			const response = await fetch(`https://healthplus-2b9b0.firebaseio.com/lab/equipment.json`);
-			if (!response.ok) {
-				throw new Error("Failed to fetch equipment status");
+			const { data, error } = await supabase
+				.from('lab_equipment')
+				.select('*');
+
+			if (error) {
+				throw new Error(`Failed to fetch equipment status: ${error.message}`);
 			}
 
-			const resData = await response.json();
-			const loadedEquipment = [];
-
-			for (const key in resData) {
-				loadedEquipment.push({
-					id: key,
-					name: resData[key].name,
-					type: resData[key].type,
-					status: resData[key].status,
-					lastMaintenance: resData[key].lastMaintenance,
-					nextMaintenance: resData[key].nextMaintenance,
-					calibrationDate: resData[key].calibrationDate,
-					location: resData[key].location,
-					assignedTechnician: resData[key].assignedTechnician
-				});
-			}
+			const loadedEquipment = data.map(item => ({
+				id: item.id,
+				name: item.name,
+				type: item.type,
+				status: item.status,
+				lastMaintenance: item.last_maintenance,
+				nextMaintenance: item.next_maintenance,
+				calibrationDate: item.calibration_date,
+				location: item.location,
+				assignedTechnician: item.assigned_technician
+			}));
 
 			dispatch({
 				type: FETCH_EQUIPMENT_STATUS,
@@ -251,31 +258,28 @@ export const FetchEquipmentStatus = () => {
 // Update Sample Status
 export const UpdateSampleStatus = (sampleId, newStatus, location = null) => {
 	return async (dispatch, getState) => {
-		const token = getState().auth.token;
 		const userId = getState().auth.userId;
 
 		try {
 			const updateData = {
 				status: newStatus,
-				lastUpdated: new Date().toISOString(),
-				updatedBy: userId
+				updated_at: new Date().toISOString(),
+				updated_by: userId
 			};
 
 			if (location) {
-				updateData.currentLocation = location;
+				updateData.current_location = location;
 			}
 
-			const response = await fetch(
-				`https://healthplus-2b9b0.firebaseio.com/lab/samples/${sampleId}.json?auth=${token}`,
-				{
-					method: "PATCH",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(updateData)
-				}
-			);
+			const { data, error } = await supabase
+				.from('lab_samples')
+				.update(updateData)
+				.eq('id', sampleId)
+				.select()
+				.single();
 
-			if (!response.ok) {
-				throw new Error("Failed to update sample status");
+			if (error) {
+				throw new Error(`Failed to update sample status: ${error.message}`);
 			}
 
 			dispatch({

@@ -1,4 +1,5 @@
 import Appointment from '../../Models/Appointment';
+import { supabase } from '../../lib/supabase';
 
 
 export const CREATE_APPOINTMENT = "CREATE_APPOINTMENT";
@@ -10,78 +11,77 @@ export const FetchAppointments = () =>{
 	return async (dispatch,getState) => {
 		const userId = getState().auth.userId;
 		try{
-			const response = await fetch(`https://healthplus-2b9b0.firebaseio.com/appointments.json`);	
-			if (!response.ok){
-				throw new Error("Something went wrong");
+			const { data, error } = await supabase
+				.from('appointments')
+				.select('*')
+				.eq('patient_id', userId);
+
+			if (error){
+				throw new Error(error.message || "Something went wrong");
 			}
 
-			const resData = await response.json();
-			console.log(resData);
-			const loadedAppointments = [];
-			for (const key in resData){
-				loadedAppointments.push(
-					new Appointment(
-						key,
-						resData[key].Name,
-						resData[key].contact,
-						resData[key].email,
-						resData[key].date,
-						resData[key].time,
-						resData[key].fees,
-						resData[key].patientId
+			console.log(data);
+			const loadedAppointments = data.map(appointment =>
+				new Appointment(
+					appointment.id,
+					appointment.name,
+					appointment.contact,
+					appointment.email,
+					appointment.date,
+					appointment.time,
+					appointment.fees,
+					appointment.patient_id
+				)
+			);
 
-
-						)
-					);
-			}
 			dispatch({
 				type:FETCH_APPOINTMENTS,
-				appointments:loadedAppointments.filter(appointment => appointment.patientId === userId )
+				appointments:loadedAppointments
 			})
-			}catch (err){
-				throw err;
-			}
-		} 
-		
+		}catch (err){
+			throw err;
+		}
+	}
+
 	};
 
 
 
 export const CreateAppointment = (Name, contact, email, date, time, fees) => {
 	return async (dispatch, getState) => {
-		const token = getState().auth.token
 		const userId = getState().auth.userId
-		const response = await fetch(
-			`https://healthplus-2b9b0.firebaseio.com/appointments.json?auth=${token}`,
-			{
-				method: "POST",
-				header: { "content-Type": "application/json" },
-				body: JSON.stringify({
-					Name,
+		try {
+			const { data, error } = await supabase
+				.from('appointments')
+				.insert([{
+					name: Name,
 					contact,
 					email,
 					date,
 					time,
 					fees,
-					patientId:userId,
-				}),
+					patient_id: userId,
+					created_at: new Date().toISOString()
+				}]);
+
+			if (error) {
+				throw new Error(error.message || "Something went wrong");
 			}
-		);
-		if (!response.ok) {
-			throw new Error("Something went wrong");
+
+			dispatch({
+				type: CREATE_APPOINTMENT,
+				appointmentData: {
+					Name: Name,
+					contact: contact,
+					email: email,
+					date: date,
+					time: time,
+					fees: fees,
+					patientId: userId
+				},
+			});
+		} catch (err) {
+			throw err;
 		}
 	};
-	dispatch({
-		type: CREATE_APPOINTMENT,
-
-		appointmentData: {
-			Name: Name,
-			contact: contact,
-			email: email,
-			date: date,
-			time: time,
-			fees: fees,
-			patientId:userId
-		},
-	});
 };

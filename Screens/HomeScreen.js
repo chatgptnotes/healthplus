@@ -371,14 +371,17 @@ const HomeScreen = (props) => {
 								<TouchableOpacity
 									style={styles.floatingButtons3}
 									activeOpacity={0.8}
+									onPress={() => {
+										props.navigation.navigate("PatientDocuments");
+									}}
 								>
-									<FontAwesome5
-										name="user-md"
+									<MaterialCommunityIcons
+										name="folder-multiple"
 										size={26}
 										color="white"
 									/>
 									<View style={{ marginTop: 0 }}>
-										<Text style={styles.Buttontext}>Find Doctors</Text>
+										<Text style={styles.Buttontext}>My Documents</Text>
 									</View>
 								</TouchableOpacity>
 							</>
@@ -420,13 +423,15 @@ const HomeScreen = (props) => {
 								</View>
 									<Text style={{fontSize:16, color:'white', textAlign:'center'}}>Next Visits</Text>
 								</TouchableOpacity>
-								<TouchableOpacity style={styles.TotalCollection}>
+								<TouchableOpacity style={styles.TotalCollection} onPress={()=>{
+									props.navigation.navigate('PatientDocuments');
+								}}>
 									<FontAwesome5
-									name="heart"
+									name="file-medical"
 									size={35}
 									color="white"
 								/>
-									<Text style={{fontSize:16, color:'white', textAlign:'center'}}>Health Records</Text>
+									<Text style={{fontSize:16, color:'white', textAlign:'center'}}>Medical Docs</Text>
 								</TouchableOpacity>
 							</>
 						)}

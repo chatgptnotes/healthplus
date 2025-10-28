@@ -23,6 +23,7 @@ import BillingReducer from './store/reducers/BillingReducer';
 import NursingReducer from './store/reducers/NursingReducer';
 import HospitalMetricsReducer from './store/reducers/HospitalMetricsReducer';
 import NotificationReducer from './store/reducers/NotificationReducer';
+import DocumentReducer from './store/reducers/DocumentReducer';
 
 // Import your screens
 import ProfileScreen from './Screens/chooseProfileScreen';
@@ -67,6 +68,10 @@ import PatientFeedback from './Screens/PatientFeedback';
 import DigitalConsent from './Screens/DigitalConsent';
 import FeedbackAnalytics from './Screens/FeedbackAnalytics';
 
+// Import Patient Document Management screens
+import PatientDocuments from './Screens/PatientDocuments';
+import DocumentViewer from './Screens/DocumentViewer';
+
 // Import Quality Management & Leadership module screens
 import MorningHuddle from './Screens/MorningHuddle';
 import MarketingDashboard from './Screens/MarketingDashboard';
@@ -102,6 +107,7 @@ const store = configureStore({
     nursing: NursingReducer,
     hospitalMetrics: HospitalMetricsReducer,
     notifications: NotificationReducer,
+    documents: DocumentReducer,
   },
 });
 
@@ -350,6 +356,18 @@ function HomeStack() {
         name="FeedbackAnalytics"
         component={FeedbackAnalytics}
         options={{ title: 'Feedback Analytics' }}
+      />
+
+      {/* Patient Document Management Screens */}
+      <Stack.Screen
+        name="PatientDocuments"
+        component={PatientDocuments}
+        options={{ title: 'Medical Documents' }}
+      />
+      <Stack.Screen
+        name="DocumentViewer"
+        component={DocumentViewer}
+        options={{ title: 'Document Viewer' }}
       />
 
       {/* Quality Management & Leadership Module Screens */}

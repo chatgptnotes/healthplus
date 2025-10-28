@@ -1,3 +1,5 @@
+import { supabase } from '../../lib/supabase';
+
 // Billing Action Types
 export const FETCH_BILLS = "FETCH_BILLS";
 export const CREATE_BILL = "CREATE_BILL";
@@ -15,33 +17,31 @@ export const ADD_INSURANCE_PROVIDER = "ADD_INSURANCE_PROVIDER";
 export const FetchBills = () => {
 	return async (dispatch, getState) => {
 		try {
-			const response = await fetch(`https://healthplus-2b9b0.firebaseio.com/billing/bills.json`);
-			if (!response.ok) {
-				throw new Error("Failed to fetch bills");
+			const { data, error } = await supabase
+				.from('billing_bills')
+				.select('*');
+
+			if (error) {
+				throw new Error(`Failed to fetch bills: ${error.message}`);
 			}
 
-			const resData = await response.json();
-			const loadedBills = [];
-
-			for (const key in resData) {
-				loadedBills.push({
-					id: key,
-					patientId: resData[key].patientId,
-					patientName: resData[key].patientName,
-					services: resData[key].services,
-					totalAmount: resData[key].totalAmount,
-					paidAmount: resData[key].paidAmount || 0,
-					pendingAmount: resData[key].pendingAmount || resData[key].totalAmount,
-					status: resData[key].status || 'Pending',
-					billDate: resData[key].billDate,
-					dueDate: resData[key].dueDate,
-					paymentMethod: resData[key].paymentMethod,
-					insuranceDetails: resData[key].insuranceDetails,
-					department: resData[key].department,
-					doctorId: resData[key].doctorId,
-					discountApplied: resData[key].discountApplied || 0
-				});
-			}
+			const loadedBills = data.map(item => ({
+				id: item.id,
+				patientId: item.patient_id,
+				patientName: item.patient_name,
+				services: item.services,
+				totalAmount: item.total_amount,
+				paidAmount: item.paid_amount || 0,
+				pendingAmount: item.pending_amount || item.total_amount,
+				status: item.status || 'Pending',
+				billDate: item.bill_date,
+				dueDate: item.due_date,
+				paymentMethod: item.payment_method,
+				insuranceDetails: item.insurance_details,
+				department: item.department,
+				doctorId: item.doctor_id,
+				discountApplied: item.discount_applied || 0
+			}));
 
 			dispatch({
 				type: FETCH_BILLS,
@@ -56,41 +56,53 @@ export const FetchBills = () => {
 // Create Bill
 export const CreateBill = (billData) => {
 	return async (dispatch, getState) => {
-		const token = getState().auth.token;
 		const userId = getState().auth.userId;
 
 		try {
-			const response = await fetch(
-				`https://healthplus-2b9b0.firebaseio.com/billing/bills.json?auth=${token}`,
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						...billData,
-						billDate: new Date().toISOString(),
-						status: 'Pending',
-						createdBy: userId,
-						pendingAmount: billData.totalAmount
-					})
-				}
-			);
+			const { data, error } = await supabase
+				.from('billing_bills')
+				.insert({
+					patient_id: billData.patientId,
+					patient_name: billData.patientName,
+					services: billData.services,
+					total_amount: billData.totalAmount,
+					due_date: billData.dueDate,
+					insurance_details: billData.insuranceDetails,
+					department: billData.department,
+					doctor_id: billData.doctorId,
+					discount_applied: billData.discountApplied || 0,
+					bill_date: new Date().toISOString(),
+					status: 'Pending',
+					created_by: userId,
+					pending_amount: billData.totalAmount,
+					paid_amount: 0,
+					created_at: new Date().toISOString()
+				})
+				.select()
+				.single();
 
-			if (!response.ok) {
-				throw new Error("Failed to create bill");
+			if (error) {
+				throw new Error(`Failed to create bill: ${error.message}`);
 			}
-
-			const resData = await response.json();
 
 			dispatch({
 				type: CREATE_BILL,
 				bill: {
-					id: resData.name,
-					...billData,
-					billDate: new Date().toISOString(),
-					status: 'Pending',
-					createdBy: userId,
-					pendingAmount: billData.totalAmount,
-					paidAmount: 0
+					id: data.id,
+					patientId: data.patient_id,
+					patientName: data.patient_name,
+					services: data.services,
+					totalAmount: data.total_amount,
+					dueDate: data.due_date,
+					insuranceDetails: data.insurance_details,
+					department: data.department,
+					doctorId: data.doctor_id,
+					discountApplied: data.discount_applied,
+					billDate: data.bill_date,
+					status: data.status,
+					createdBy: data.created_by,
+					pendingAmount: data.pending_amount,
+					paidAmount: data.paid_amount
 				}
 			});
 		} catch (err) {
@@ -102,52 +114,52 @@ export const CreateBill = (billData) => {
 // Process Payment
 export const ProcessPayment = (billId, paymentData) => {
 	return async (dispatch, getState) => {
-		const token = getState().auth.token;
 		const userId = getState().auth.userId;
 
 		try {
 			const { amount, paymentMethod, transactionId, insuranceClaimId } = paymentData;
 
 			const updateData = {
-				paidAmount: paymentData.paidAmount,
-				pendingAmount: paymentData.pendingAmount,
+				paid_amount: paymentData.paidAmount,
+				pending_amount: paymentData.pendingAmount,
 				status: paymentData.pendingAmount <= 0 ? 'Paid' : 'Partially Paid',
-				lastPaymentDate: new Date().toISOString(),
-				paymentMethod: paymentMethod,
-				transactionId: transactionId,
-				processedBy: userId
+				last_payment_date: new Date().toISOString(),
+				payment_method: paymentMethod,
+				transaction_id: transactionId,
+				processed_by: userId,
+				updated_at: new Date().toISOString()
 			};
 
-			const response = await fetch(
-				`https://healthplus-2b9b0.firebaseio.com/billing/bills/${billId}.json?auth=${token}`,
-				{
-					method: "PATCH",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(updateData)
-				}
-			);
+			const { data: billData, error: billError } = await supabase
+				.from('billing_bills')
+				.update(updateData)
+				.eq('id', billId)
+				.select()
+				.single();
 
-			if (!response.ok) {
-				throw new Error("Failed to process payment");
+			if (billError) {
+				throw new Error(`Failed to process payment: ${billError.message}`);
 			}
 
 			// Also create payment history record
-			const paymentHistoryResponse = await fetch(
-				`https://healthplus-2b9b0.firebaseio.com/billing/paymentHistory.json?auth=${token}`,
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						billId: billId,
-						amount: amount,
-						paymentMethod: paymentMethod,
-						transactionId: transactionId,
-						paymentDate: new Date().toISOString(),
-						processedBy: userId,
-						insuranceClaimId: insuranceClaimId
-					})
-				}
-			);
+			const { data: historyData, error: historyError } = await supabase
+				.from('billing_payment_history')
+				.insert({
+					bill_id: billId,
+					amount: amount,
+					payment_method: paymentMethod,
+					transaction_id: transactionId,
+					payment_date: new Date().toISOString(),
+					processed_by: userId,
+					insurance_claim_id: insuranceClaimId,
+					created_at: new Date().toISOString()
+				})
+				.select()
+				.single();
+
+			if (historyError) {
+				console.warn('Failed to create payment history record:', historyError.message);
+			}
 
 			dispatch({
 				type: PROCESS_PAYMENT,
@@ -164,38 +176,43 @@ export const ProcessPayment = (billId, paymentData) => {
 // Submit Insurance Claim
 export const SubmitInsuranceClaim = (claimData) => {
 	return async (dispatch, getState) => {
-		const token = getState().auth.token;
 		const userId = getState().auth.userId;
 
 		try {
-			const response = await fetch(
-				`https://healthplus-2b9b0.firebaseio.com/billing/insuranceClaims.json?auth=${token}`,
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						...claimData,
-						submissionDate: new Date().toISOString(),
-						status: 'Submitted',
-						submittedBy: userId
-					})
-				}
-			);
+			const { data, error } = await supabase
+				.from('billing_insurance_claims')
+				.insert({
+					patient_id: claimData.patientId,
+					patient_name: claimData.patientName,
+					bill_id: claimData.billId,
+					insurance_provider: claimData.insuranceProvider,
+					policy_number: claimData.policyNumber,
+					claim_amount: claimData.claimAmount,
+					submission_date: new Date().toISOString(),
+					status: 'Submitted',
+					submitted_by: userId,
+					created_at: new Date().toISOString()
+				})
+				.select()
+				.single();
 
-			if (!response.ok) {
-				throw new Error("Failed to submit insurance claim");
+			if (error) {
+				throw new Error(`Failed to submit insurance claim: ${error.message}`);
 			}
-
-			const resData = await response.json();
 
 			dispatch({
 				type: SUBMIT_INSURANCE_CLAIM,
 				claim: {
-					id: resData.name,
-					...claimData,
-					submissionDate: new Date().toISOString(),
-					status: 'Submitted',
-					submittedBy: userId
+					id: data.id,
+					patientId: data.patient_id,
+					patientName: data.patient_name,
+					billId: data.bill_id,
+					insuranceProvider: data.insurance_provider,
+					policyNumber: data.policy_number,
+					claimAmount: data.claim_amount,
+					submissionDate: data.submission_date,
+					status: data.status,
+					submittedBy: data.submitted_by
 				}
 			});
 		} catch (err) {
@@ -208,32 +225,30 @@ export const SubmitInsuranceClaim = (claimData) => {
 export const FetchInsuranceClaims = () => {
 	return async (dispatch, getState) => {
 		try {
-			const response = await fetch(`https://healthplus-2b9b0.firebaseio.com/billing/insuranceClaims.json`);
-			if (!response.ok) {
-				throw new Error("Failed to fetch insurance claims");
+			const { data, error } = await supabase
+				.from('billing_insurance_claims')
+				.select('*');
+
+			if (error) {
+				throw new Error(`Failed to fetch insurance claims: ${error.message}`);
 			}
 
-			const resData = await response.json();
-			const loadedClaims = [];
-
-			for (const key in resData) {
-				loadedClaims.push({
-					id: key,
-					patientId: resData[key].patientId,
-					patientName: resData[key].patientName,
-					billId: resData[key].billId,
-					insuranceProvider: resData[key].insuranceProvider,
-					policyNumber: resData[key].policyNumber,
-					claimAmount: resData[key].claimAmount,
-					approvedAmount: resData[key].approvedAmount || 0,
-					status: resData[key].status,
-					submissionDate: resData[key].submissionDate,
-					processingDate: resData[key].processingDate,
-					approvalDate: resData[key].approvalDate,
-					rejectionReason: resData[key].rejectionReason,
-					submittedBy: resData[key].submittedBy
-				});
-			}
+			const loadedClaims = data.map(item => ({
+				id: item.id,
+				patientId: item.patient_id,
+				patientName: item.patient_name,
+				billId: item.bill_id,
+				insuranceProvider: item.insurance_provider,
+				policyNumber: item.policy_number,
+				claimAmount: item.claim_amount,
+				approvedAmount: item.approved_amount || 0,
+				status: item.status,
+				submissionDate: item.submission_date,
+				processingDate: item.processing_date,
+				approvalDate: item.approval_date,
+				rejectionReason: item.rejection_reason,
+				submittedBy: item.submitted_by
+			}));
 
 			dispatch({
 				type: FETCH_INSURANCE_CLAIMS,
@@ -248,28 +263,32 @@ export const FetchInsuranceClaims = () => {
 // Update Claim Status
 export const UpdateClaimStatus = (claimId, newStatus, additionalData = {}) => {
 	return async (dispatch, getState) => {
-		const token = getState().auth.token;
 		const userId = getState().auth.userId;
 
 		try {
+			// Convert camelCase to snake_case for additional data
+			const convertedAdditionalData = {};
+			for (const [key, value] of Object.entries(additionalData)) {
+				const snakeKey = key.replace(/([A-Z])/g, '_$1').toLowerCase();
+				convertedAdditionalData[snakeKey] = value;
+			}
+
 			const updateData = {
 				status: newStatus,
-				lastUpdated: new Date().toISOString(),
-				updatedBy: userId,
-				...additionalData
+				updated_at: new Date().toISOString(),
+				updated_by: userId,
+				...convertedAdditionalData
 			};
 
-			const response = await fetch(
-				`https://healthplus-2b9b0.firebaseio.com/billing/insuranceClaims/${claimId}.json?auth=${token}`,
-				{
-					method: "PATCH",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(updateData)
-				}
-			);
+			const { data, error } = await supabase
+				.from('billing_insurance_claims')
+				.update(updateData)
+				.eq('id', claimId)
+				.select()
+				.single();
 
-			if (!response.ok) {
-				throw new Error("Failed to update claim status");
+			if (error) {
+				throw new Error(`Failed to update claim status: ${error.message}`);
 			}
 
 			dispatch({
@@ -289,26 +308,24 @@ export const UpdateClaimStatus = (claimId, newStatus, additionalData = {}) => {
 export const FetchPaymentHistory = () => {
 	return async (dispatch, getState) => {
 		try {
-			const response = await fetch(`https://healthplus-2b9b0.firebaseio.com/billing/paymentHistory.json`);
-			if (!response.ok) {
-				throw new Error("Failed to fetch payment history");
+			const { data, error } = await supabase
+				.from('billing_payment_history')
+				.select('*');
+
+			if (error) {
+				throw new Error(`Failed to fetch payment history: ${error.message}`);
 			}
 
-			const resData = await response.json();
-			const loadedPayments = [];
-
-			for (const key in resData) {
-				loadedPayments.push({
-					id: key,
-					billId: resData[key].billId,
-					amount: resData[key].amount,
-					paymentMethod: resData[key].paymentMethod,
-					transactionId: resData[key].transactionId,
-					paymentDate: resData[key].paymentDate,
-					processedBy: resData[key].processedBy,
-					insuranceClaimId: resData[key].insuranceClaimId
-				});
-			}
+			const loadedPayments = data.map(item => ({
+				id: item.id,
+				billId: item.bill_id,
+				amount: item.amount,
+				paymentMethod: item.payment_method,
+				transactionId: item.transaction_id,
+				paymentDate: item.payment_date,
+				processedBy: item.processed_by,
+				insuranceClaimId: item.insurance_claim_id
+			}));
 
 			dispatch({
 				type: FETCH_PAYMENT_HISTORY,
@@ -324,30 +341,28 @@ export const FetchPaymentHistory = () => {
 export const FetchInsuranceProviders = () => {
 	return async (dispatch, getState) => {
 		try {
-			const response = await fetch(`https://healthplus-2b9b0.firebaseio.com/billing/insuranceProviders.json`);
-			if (!response.ok) {
-				throw new Error("Failed to fetch insurance providers");
+			const { data, error } = await supabase
+				.from('billing_insurance_providers')
+				.select('*');
+
+			if (error) {
+				throw new Error(`Failed to fetch insurance providers: ${error.message}`);
 			}
 
-			const resData = await response.json();
-			const loadedProviders = [];
-
-			for (const key in resData) {
-				loadedProviders.push({
-					id: key,
-					name: resData[key].name,
-					type: resData[key].type, // CGHS, ECHS, Railways, TPA, etc.
-					contactPerson: resData[key].contactPerson,
-					contactPhone: resData[key].contactPhone,
-					contactEmail: resData[key].contactEmail,
-					address: resData[key].address,
-					panelHospital: resData[key].panelHospital || true,
-					cashlessEnabled: resData[key].cashlessEnabled || true,
-					claimProcessingTime: resData[key].claimProcessingTime,
-					maxCashlessLimit: resData[key].maxCashlessLimit,
-					status: resData[key].status || 'Active'
-				});
-			}
+			const loadedProviders = data.map(item => ({
+				id: item.id,
+				name: item.name,
+				type: item.type, // CGHS, ECHS, Railways, TPA, etc.
+				contactPerson: item.contact_person,
+				contactPhone: item.contact_phone,
+				contactEmail: item.contact_email,
+				address: item.address,
+				panelHospital: item.panel_hospital || true,
+				cashlessEnabled: item.cashless_enabled || true,
+				claimProcessingTime: item.claim_processing_time,
+				maxCashlessLimit: item.max_cashless_limit,
+				status: item.status || 'Active'
+			}));
 
 			dispatch({
 				type: FETCH_INSURANCE_PROVIDERS,

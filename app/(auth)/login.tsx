@@ -53,7 +53,9 @@ const AuthScreen = () => {
 	
 	const signinHandler = async()=>{
 		try{
-			await dispatch(AuthActions.Login(email,password));
+			// Pass the role (doctor or patient) to the login action
+			const role = userTitle === 'doctor' ? 'doctor' : 'patient';
+			await dispatch(AuthActions.Login(email, password, role));
 			router.replace('/(tabs)');
 
 		}catch(err){

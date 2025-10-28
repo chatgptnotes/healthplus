@@ -49,8 +49,15 @@ const SignUpScreen = () => {
 	
 	const signupHandler = async()=>{
 		try{
-			await dispatch(AuthActions.SignUp(email,password));
-			await dispatch(PatientActions.CreatePatient(name,email,contact))
+			// Pass role information during signup
+			const role = userTitle === 'doctor' ? 'doctor' : 'patient';
+			await dispatch(AuthActions.SignUp(email, password, { name, role }));
+
+			// Only create patient record if signing up as patient
+			if (role === 'patient') {
+				await dispatch(PatientActions.CreatePatient(name, email, contact));
+			}
+
 			router.push('/(auth)');
 		}catch(err){
 			setError(err.message);

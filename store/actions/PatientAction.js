@@ -1,4 +1,6 @@
 import Patient from '../../Models/patients';
+import { supabase } from '../../lib/supabase';
+
 export const CREATE_PATIENT = "CREATE_PATIENT";
 export const FETCH_PATIENT  = "FETCH_PATIENT";
 export const DELETE_PATIENT = "DELETE_PATIENT";
@@ -8,78 +10,86 @@ export const fetchPatient = (id,name,email,contact,age,gender,prescription)=>{
 	return async (dispatch,getState) =>{
 		const userId = getState().auth.userId
 		try{
-			const response = await fetch(`https://healthplus-2b9b0.firebaseio.com/patients.json`);
+			const { data, error } = await supabase
+				.from('patients')
+				.select('*')
+				.eq('patient_id', userId);
 
-			if(!response.ok){
-				throw new Error('Something went wrong');
+			if(error){
+				throw new Error(error.message || 'Something went wrong');
 			}
 
-			const resData = await response.json();
 			console.log("THIS IS PATIENT ACTION!!!");
-			console.log(resData);
-			const loadedPatients = [];
-			for(const key in resData){
-				loadedPatients.push(
-					new Patient(
-					key,
-					resData[key].name,
-					resData[key].email,
-					resData[key].contact,
-					resData[key].age,
-					resData[key].gender,
-					resData[key].prescription,
-					resData[key].patientId,
+			console.log(data);
 
+			const loadedPatients = data.map(patient =>
+				new Patient(
+					patient.id,
+					patient.name,
+					patient.email,
+					patient.contact,
+					patient.age,
+					patient.gender,
+					patient.prescription,
+					patient.patient_id
 				)
+			);
 
-					);
-			}
 			dispatch({
-		type: 'FETCH_PATIENT',
-		patientData:loadedPatients.find(patient => patient.patientId === userId)
-	})
+				type: 'FETCH_PATIENT',
+				patientData: loadedPatients[0] || null
+			})
 		} catch (err){
 			throw err;
 		}
 	};
-	
+
 };
 
 export const deletePatient = (id) =>{
 	return async(dispatch,getState)=>{
-		const token = getState.auth.token;
-		await fetch(`https://healthplus-2b9b0.firebaseio.com/patients/${id}.json?auth=${token}`,
-			{method:'DELETE'});
+		try {
+			const { error } = await supabase
+				.from('patients')
+				.delete()
+				.eq('id', id);
 
+			if(error){
+				throw new Error(error.message || 'Failed to delete patient');
+			}
+
+			dispatch({
+				type: 'DELETE_PATIENT',
+				patientId:id
+			})
+		} catch (err) {
+			throw err;
+		}
 	};
-	dispatch({
-		type: 'DELETE_PATIENT',
-		patientId:id
-	})
 };
 export const UpdatePatient = (id,name,email, contact, age, gender,prescription )=>{
 	return async(dispatch, getState)=>{
-		const token = getState().auth.token;
 		const userId = getState().auth.userId;
 		try{
-			const response = await fetch(`https://healthplus-2b9b0.firebaseio.com/patients/${id}.json?auth=${token}`,{
-				method:'PATCH',
-				headers:{'Content-Type': 'application/json'},
-				body: JSON.stringify({
+			const { data, error } = await supabase
+				.from('patients')
+				.update({
 					name,
 					contact,
-					prescription
-
+					prescription,
+					updated_at: new Date().toISOString()
 				})
-			});
-			if (!response.ok){
-				throw new Error('Something went wrong');
+				.eq('id', id);
+
+			if (error){
+				throw new Error(error.message || 'Something went wrong');
 			}
+
 			dispatch({
 				type: 'UPDATE_PATIENT',
 				patientId:userId,
 				name,
-				contact, 
+				contact,
 				prescription
 			})
 		}catch (err) {
@@ -90,47 +100,45 @@ export const UpdatePatient = (id,name,email, contact, age, gender,prescription )
 }
 export const CreatePatient = (id, name, email,contact,age,gender,prescription)=>{
 	return async (dispatch,getState) => {
-		const token = getState().auth.token;
 		const userId = getState().auth.userId;
 		const Email = getState().auth.email;
 		try{
-			const response = await fetch(`https://healthplus-2b9b0.firebaseio.com/patients.json?auth=${token}`,{
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json'},
-				body: JSON.stringify({
-					id,
+			const { data, error } = await supabase
+				.from('patients')
+				.insert([{
 					name,
 					email,
 					contact,
 					age,
 					gender,
 					prescription,
-					patientId:userId,
-				})
-			})
-			if (!response.ok){
-				throw new Error('Something went wrong');
+					patient_id: userId,
+					created_at: new Date().toISOString()
+				}]);
+
+			if (error){
+				throw new Error(error.message || 'Something went wrong');
 			}
 
+			dispatch({
+				type: 'CREATE_PATIENT',
+				patientData:{
+					id:data?.[0]?.id || userId,
+					name:name,
+					email:Email,
+					contact:contact,
+					age:age,
+					gender:gender,
+					prescription:prescription,
+					patientId:userId,
+
+				}
+			});
 
 		} catch (err){
-
+			throw err;
 		}
 	};
-	dispatch({
-		type: 'CREATE_PATIENT',
-		patientData:{
-			id:userId,
-			name:name,
-			email:Email,
-			contact:contact,
-			age:age,
-			gender:gender,
-			prescription:prescription,
-			patientId:userId,
 
-		}
-	});
 
-		
 }
