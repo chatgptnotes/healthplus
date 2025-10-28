@@ -1,0 +1,39 @@
+{
+  "cli": {
+    "version": ">= 13.2.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    },
+    "production": {
+      "node": "20.19.4",
+      "ios": {
+        "autoIncrement": true
+      },
+      "env": {
+        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false"
+      },
+      "cache": {
+        "disabled": true
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "your-apple-id@example.com",
+        "ascAppId": "1234567890",
+        "appleTeamId": "ABCD123456"
+      }
+    }
+  }
+}
