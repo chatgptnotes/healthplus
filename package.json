@@ -55,6 +55,9 @@
   "resolutions": {
     "react-native-reanimated": "3.16.5"
   },
+  "overrides": {
+    "react-native-reanimated": "3.16.5"
+  },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@types/jest": "^29.5.13",
@@ -65,5 +68,10 @@
     "react-test-renderer": "18.2.0",
     "typescript": "~5.9.2"
   },
-  "private": true
+  "private": true,
+  "expo": {
+    "install": {
+      "exclude": ["react-native-reanimated"]
+    }
+  }
 }
