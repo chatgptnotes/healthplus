@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Hospital Management",
-    "slug": "HospitalManagement",
+    "name": "Adamrit Hospital Management",
+    "slug": "AdamritHospitalManagement",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/app-icon-1024.png",
@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.hopehospital.management",
-      "buildNumber": "3",
+      "buildNumber": "4",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
