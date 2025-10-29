@@ -4,7 +4,7 @@
     "slug": "HopeHospitalManagement",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/app-icon-1024.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/hope-hospital-logo.png",
@@ -17,14 +17,14 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.hopehospital.management",
-      "buildNumber": "1",
+      "buildNumber": "2",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
+        "foregroundImage": "./assets/app-icon-1024.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.hopehospital.management"
@@ -32,7 +32,7 @@
     "web": {
       "bundler": "metro",
       "output": "single",
-      "favicon": "./assets/icon.png"
+      "favicon": "./assets/app-icon-1024.png"
     },
     "extra": {
       "eas": {
